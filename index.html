@@ -554,6 +554,22 @@
     border-radius: 50%;
     background: var(--brand-primary);
   }
+  /* Numbered variant — replaces the pink dot with a number */
+  .bullet-list.numbered { counter-reset: item; }
+  .bullet-list.numbered li::before {
+    counter-increment: item;
+    content: counter(item) ".";
+    background: transparent;
+    width: 16px;
+    height: auto;
+    border-radius: 0;
+    margin-top: 0;
+    color: var(--brand-primary);
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1.5;
+    text-align: left;
+  }
 
   /* Primary CTA */
   .cta-primary {
@@ -1196,28 +1212,23 @@
               <span class="ms ms-16">battery_full</span>
             </div>
           </div>
-          <div class="module-header">
-            <div class="icon-btn" style="visibility:hidden;"><span class="ms">arrow_back</span></div>
-            <div class="title">Wiom Deposit Demo</div>
-          </div>
           <div class="scroll-body">
 
             <!-- Welcome card with start button -->
             <div class="welcome-card">
               <div class="welcome-icon"><span class="ms fill">tips_and_updates</span></div>
-              <div class="welcome-title">Wiom Partner App · Deposit Demo</div>
+              <div class="welcome-title">Wiom Partner App : Security Deposit cases</div>
               <div class="welcome-desc">
-                A walkthrough of the Net-box deposit and Paise (wallet) flows, including the key edge cases — all in one place.
+                A walkthrough of the Net-box deposit, including the key edge cases.
               </div>
 
-              <div class="welcome-subtitle">What's covered</div>
-              <ul class="bullet-list">
-                <li>Net-box Deposit — balance, 50% reserve rule, and ledger entry</li>
-                <li>Wallet → Deposit top-up — amount input, confirm sheet, success screen</li>
-                <li>Deposit Cases hub — gateway to scenario-specific screens</li>
-                <li>4 edge cases — lost device, new device order, credits earned, 50% reserve exhausted</li>
-                <li>Auto-popping sheets — 3 net-boxes returned (credit info) and 50% exhausted warning</li>
-                <li>Info modals — Net-box Credit and Locked Fund explainers</li>
+              <div class="welcome-subtitle">What's Covered</div>
+              <ul class="bullet-list numbered">
+                <li>Educational cards below the fund section + a supporting bottom sheet with more information</li>
+                <li>Netbox Credit education, along with credit count and transaction details on the screen</li>
+                <li>Lost device deduction transaction</li>
+                <li>New device order entry</li>
+                <li>Warning card and bottom sheet when the partner has exhausted 50% of the balance limit</li>
               </ul>
 
               <button class="cta-primary" data-target="1">Start</button>
