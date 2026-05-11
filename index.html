@@ -1128,6 +1128,49 @@
   .bs-sheet::-webkit-scrollbar { width: 4px; }
   .scroll-body::-webkit-scrollbar-thumb,
   .bs-sheet::-webkit-scrollbar-thumb { background: rgba(20, 16, 33, 0.18); border-radius: 999px; }
+
+  /* ───────── Mobile (≤640px) — phone fills the viewport end-to-end ───────── */
+  @media (max-width: 640px) {
+    html, body { background: var(--bg-screen); }
+    .page {
+      padding: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      justify-content: space-between;
+    }
+    .stage {
+      width: 100vw;
+      flex: 1;
+    }
+    .frame {
+      width: 100vw;
+    }
+    .frame-label { display: none; }
+    .phone {
+      width: 100vw;
+      height: calc(100vh - 76px);
+      height: calc(100dvh - 76px);
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+      background: var(--bg-screen);
+    }
+    .phone-screen {
+      border-radius: 0;
+      height: 100%;
+    }
+    .frame-caption { display: none; }
+    .nav {
+      margin-top: 0;
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+    /* Safe-area for iOS notches / Android system bars */
+    .status-bar {
+      padding-top: env(safe-area-inset-top);
+      box-sizing: content-box;
+    }
+  }
 </style>
 </head>
 <body>
