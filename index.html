@@ -863,6 +863,20 @@
     justify-content: center;
     flex-shrink: 0;
   }
+  /* Numbered circle used in the Deposit Cases hub */
+  .case-card-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--brand-primary);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 700;
+  }
   .case-card-icon.warning  { background: var(--bg-warning);  color: var(--state-warning); }
   .case-card-icon.negative { background: var(--bg-negative); color: var(--state-negative); }
   .case-card-icon.positive { background: var(--bg-positive); color: var(--state-positive); }
@@ -1513,58 +1527,55 @@
           </div>
           <div class="module-header">
             <div class="icon-btn" data-target="3"><span class="ms">arrow_back</span></div>
-            <div class="title">डेपोजीट केसेस</div>
+            <div class="title">Deposit Cases</div>
           </div>
           <div class="scroll-body">
 
             <div class="hub-intro">
-              किसी भी केस पर टैप करें — डेपोजीट से जुड़ी अलग-अलग सिचुएशन देखें
+              Tap on any case to view different deposit-related scenarios
             </div>
 
-            <div class="hub-section-title">मुख्य फ़्लो</div>
             <div class="case-card main" data-target="5">
-              <div class="case-card-icon"><span class="ms">savings</span></div>
+              <div class="case-card-num">1</div>
               <div class="case-card-meta">
-                <div class="title">मुख्य डेपोजीट देखें</div>
-                <div class="desc">बैलेंस, लेन-देन, क्रेडिट हिस्ट्री</div>
+                <div class="title">Main Screen</div>
+                <div class="desc">View main deposit details</div>
               </div>
               <span class="ms case-card-chevron">chevron_right</span>
             </div>
 
-            <div class="hub-section-title">डेपोजीट केसेस</div>
-
             <div class="case-card" data-target="13">
-              <div class="case-card-icon positive"><span class="ms">redeem</span></div>
+              <div class="case-card-num">2</div>
               <div class="case-card-meta">
-                <div class="title">1 · Wiom को 3 नेट-बॉक्स वापस मिले</div>
-                <div class="desc">डेपोजीट स्क्रीन खुलेगी, 1 सेकंड बाद पॉपअप</div>
+                <div class="title">Partner Returned unused netboxes</div>
+                <div class="desc">Receive Credit points</div>
               </div>
               <span class="ms case-card-chevron">chevron_right</span>
             </div>
 
             <div class="case-card" data-target="9">
-              <div class="case-card-icon negative"><span class="ms">report</span></div>
+              <div class="case-card-num">3</div>
               <div class="case-card-meta">
-                <div class="title">2 · पार्टनर ने 1 नेट-बॉक्स खोया</div>
-                <div class="desc">−₹200 सुरक्षित फंड से कटा — एंट्री देखें</div>
+                <div class="title">Partner Lost netbox</div>
+                <div class="desc">₹200 deducted from the security fund</div>
               </div>
               <span class="ms case-card-chevron">chevron_right</span>
             </div>
 
             <div class="case-card" data-target="10">
-              <div class="case-card-icon"><span class="ms">add_box</span></div>
+              <div class="case-card-num">4</div>
               <div class="case-card-meta">
-                <div class="title">3 · पार्टनर ने 5 नए नेट-बॉक्स ऑर्डर किए</div>
-                <div class="desc">+₹1,000 डेपोजीट में जुड़े — एंट्री देखें</div>
+                <div class="title">Partner ordered 5 new NetBoxes</div>
+                <div class="desc">+₹1,000 added to the deposit along with entry</div>
               </div>
               <span class="ms case-card-chevron">chevron_right</span>
             </div>
 
             <div class="case-card" data-target="12">
-              <div class="case-card-icon warning"><span class="ms">warning</span></div>
+              <div class="case-card-num">5</div>
               <div class="case-card-meta">
-                <div class="title">4 · पार्टनर ने 50% बैलेंस इस्तेमाल किया</div>
-                <div class="desc">रिज़र्व ख़त्म — आगे की कटौती वॉलेट से होगी</div>
+                <div class="title">50% Reserve exhausted</div>
+                <div class="desc">Warning of the future deductions</div>
               </div>
               <span class="ms case-card-chevron">chevron_right</span>
             </div>
