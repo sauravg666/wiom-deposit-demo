@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Wiom — Paise &amp; Security Deposit flow</title>
+<title>Wiom, Paise &amp; Security Deposit flow</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Material+Symbols+Outlined" rel="stylesheet" />
@@ -266,7 +266,7 @@
     margin-left: 4px;
   }
 
-  /* Scrollable body — mimics phone scroll for screens with long content / bottom CTAs */
+  /* Scrollable body, mimics phone scroll for screens with long content / bottom CTAs */
   .scroll-body {
     flex: 1 1 auto;
     overflow-y: auto;
@@ -402,7 +402,7 @@
     gap: 4px;
   }
 
-  /* Calc strip — educational locked-amount explainer */
+  /* Calc strip, educational locked-amount explainer */
   .calc-strip {
     display: flex;
     align-items: center;
@@ -447,7 +447,7 @@
     letter-spacing: 0.06em;
   }
 
-  /* Locked-fund calc display (v2 — legacy, unused after refactor) */
+  /* Locked-fund calc display (v2, legacy, unused after refactor) */
   .locked-calc {
     display: flex;
     align-items: baseline;
@@ -466,7 +466,7 @@
     font-weight: 500;
   }
 
-  /* Deposit breakdown (small lines beneath hero — label left, amount right) */
+  /* Deposit breakdown (small lines beneath hero, label left, amount right) */
   .deposit-breakdown {
     margin-top: 14px;
     font-size: 12.5px;
@@ -490,7 +490,7 @@
   .breakdown-row .info-icon { width: 18px; height: 18px; }
   .breakdown-row .info-icon .ms { font-size: 15px; color: var(--text-hint); }
 
-  /* Netbox-only credit row — same size/weight as other kv-rows, just green */
+  /* Netbox-only credit row, same size/weight as other kv-rows, just green */
   .kv-row.credit-only .k,
   .kv-row.credit-only .v {
     color: var(--state-positive);
@@ -553,22 +553,6 @@
     margin-top: 7px;
     border-radius: 50%;
     background: var(--brand-primary);
-  }
-  /* Numbered variant — replaces the pink dot with a number */
-  .bullet-list.numbered { counter-reset: item; }
-  .bullet-list.numbered li::before {
-    counter-increment: item;
-    content: counter(item) ".";
-    background: transparent;
-    width: 16px;
-    height: auto;
-    border-radius: 0;
-    margin-top: 0;
-    color: var(--brand-primary);
-    font-weight: 700;
-    font-size: 13px;
-    line-height: 1.5;
-    text-align: left;
   }
 
   /* Primary CTA */
@@ -785,7 +769,7 @@
     margin: 0 2px;
   }
 
-  /* States row banner (for non-active wallet only — shown as variant chip) */
+  /* States row banner (for non-active wallet only, shown as variant chip) */
   .state-banner {
     border-radius: 12px;
     padding: 10px 12px;
@@ -1136,7 +1120,7 @@
     padding-bottom: 12px;
   }
 
-  /* Modal overlay — info bottom sheet appears inside the phone frame */
+  /* Modal overlay, info bottom sheet appears inside the phone frame */
   .modal-overlay {
     position: absolute;
     inset: 0;
@@ -1159,7 +1143,7 @@
   .scroll-body::-webkit-scrollbar-thumb,
   .bs-sheet::-webkit-scrollbar-thumb { background: rgba(20, 16, 33, 0.18); border-radius: 999px; }
 
-  /* ───────── Mobile (≤640px) — phone fills the viewport end-to-end ───────── */
+  /* ───────── Mobile (≤640px), phone fills the viewport end-to-end ───────── */
   @media (max-width: 640px) {
     html, body { background: var(--bg-screen); }
     .page {
@@ -1209,7 +1193,7 @@
   <div class="stage" id="stage">
 
     <!-- ═══════════════════════════════════════════════════════════
-         FRAME 0 — Edge Cases Hub (yellow)
+         FRAME 0, Edge Cases Hub (yellow)
          ═══════════════════════════════════════════════════════════ -->
     <div class="frame active" data-step="hub" data-is-hub>
       <div class="frame-label">
@@ -1226,23 +1210,28 @@
               <span class="ms ms-16">battery_full</span>
             </div>
           </div>
+          <div class="module-header">
+            <div class="icon-btn" style="visibility:hidden;"><span class="ms">arrow_back</span></div>
+            <div class="title">Wiom Deposit Demo</div>
+          </div>
           <div class="scroll-body">
 
             <!-- Welcome card with start button -->
             <div class="welcome-card">
               <div class="welcome-icon"><span class="ms fill">tips_and_updates</span></div>
-              <div class="welcome-title">Wiom Partner App : Security Deposit cases</div>
+              <div class="welcome-title">Wiom Partner App · Deposit Demo</div>
               <div class="welcome-desc">
-                A walkthrough of the Net-box deposit, including the key edge cases.
+                A walkthrough of the Net-box deposit and Paise (wallet) flows, including the key edge cases, all in one place.
               </div>
 
-              <div class="welcome-subtitle">What's Covered</div>
-              <ul class="bullet-list numbered">
-                <li>Educational cards below the fund section + a supporting bottom sheet with more information</li>
-                <li>Netbox Credit education, along with credit count and transaction details on the screen</li>
-                <li>Lost device deduction transaction</li>
-                <li>New device order entry</li>
-                <li>Warning card and bottom sheet when the partner has exhausted 50% of the balance limit</li>
+              <div class="welcome-subtitle">What's covered</div>
+              <ul class="bullet-list">
+                <li>Net-box Deposit, balance, 50% reserve rule, and ledger entry</li>
+                <li>Wallet → Deposit top-up, amount input, confirm sheet, success screen</li>
+                <li>Deposit Cases hub, gateway to scenario-specific screens</li>
+                <li>4 edge cases, lost device, new device order, credits earned, 50% reserve exhausted</li>
+                <li>Auto-popping sheets,3 net-boxes returned (credit info) and 50% exhausted warning</li>
+                <li>Info modals, Net-box Credit and Locked Fund explainers</li>
               </ul>
 
               <button class="cta-primary" data-target="1">Start</button>
@@ -1254,7 +1243,7 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════
-         FRAME 1 — Home (tasks + assurance strip)
+         FRAME 1, Home (tasks + assurance strip)
          ═══════════════════════════════════════════════════════════ -->
     <div class="frame" data-step="1">
       <div class="frame-label"><span class="frame-step">1</span>Home · Tasks Dashboard</div>
@@ -1343,7 +1332,7 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════
-         FRAME 2 — Side Nav (drawer open)
+         FRAME 2, Side Nav (drawer open)
          ═══════════════════════════════════════════════════════════ -->
     <div class="frame" data-step="2">
       <div class="frame-label"><span class="frame-step">2</span>Side Nav (Drawer)</div>
@@ -1399,14 +1388,14 @@
               </div>
             </div>
           </div>
-          <!-- Dim backdrop (remaining 20%) — tap to close back to Home -->
+          <!-- Dim backdrop (remaining 20%), tap to close back to Home -->
           <div class="drawer-dim" data-target="1"></div>
         </div>
       </div>
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════
-         FRAME 3 — Wallet Home
+         FRAME 3, Wallet Home
          ═══════════════════════════════════════════════════════════ -->
     <div class="frame" data-step="3">
       <div class="frame-label"><span class="frame-step">3</span>Paise (Wallet Home)</div>
@@ -1426,7 +1415,7 @@
           </div>
           <div class="scroll-body">
 
-            <!-- Wallet hero card — with card-head similar to deposit card -->
+            <!-- Wallet hero card, with card-head similar to deposit card -->
             <div class="card" style="padding:20px;">
               <div class="card-head">
                 <span class="ms">account_balance_wallet</span>
@@ -1519,7 +1508,7 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════
-         FRAME 4 — Deposit Cases Hub (yellow)
+         FRAME 4, Deposit Cases Hub (yellow)
          ═══════════════════════════════════════════════════════════ -->
     <div class="frame" data-step="hub2" data-is-hub>
       <div class="frame-label">
@@ -1582,13 +1571,13 @@
               <span class="ms case-card-chevron">chevron_right</span>
             </div>
 
-            <div class="hub-section-title" style="margin-top:20px;">v2 — Proposed New Model</div>
+            <div class="hub-section-title" style="margin-top:20px;">v2, Proposed New Model</div>
 
             <div class="case-card" data-target="13">
               <div class="case-card-num" style="background:#6D17CE;">1</div>
               <div class="case-card-meta">
                 <div class="title">Main Screen (v2)</div>
-                <div class="desc">No 50% rule — per-netbox security model</div>
+                <div class="desc">No 50% rule, per-netbox security model</div>
               </div>
               <span class="ms case-card-chevron">chevron_right</span>
             </div>
@@ -1597,7 +1586,7 @@
               <div class="case-card-num" style="background:#6D17CE;">2</div>
               <div class="case-card-meta">
                 <div class="title">Returns (v2)</div>
-                <div class="desc">3 credits added — deposit untouched</div>
+                <div class="desc">3 credits added, deposit untouched</div>
               </div>
               <span class="ms case-card-chevron">chevron_right</span>
             </div>
@@ -1617,7 +1606,7 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════
-         FRAME 5 — Deposit Detail
+         FRAME 5, Deposit Detail
          ═══════════════════════════════════════════════════════════ -->
     <div class="frame" data-step="2">
       <div class="frame-label"><span class="frame-step">2</span>Deposit Detail</div>
@@ -1637,7 +1626,7 @@
           </div>
           <div class="scroll-body">
 
-            <!-- Balance card — header + hero + minimum + stats -->
+            <!-- Balance card, header + hero + minimum + stats -->
             <div class="card" style="padding:20px;">
               <div class="card-head">
                 <span class="ms">savings</span>
@@ -1651,7 +1640,7 @@
               </div>
               <div class="spacer-xl"></div>
 
-              <!-- Educational calc strip — info icon opens locked-fund sheet (screen 8) -->
+              <!-- Educational calc strip, info icon opens locked-fund sheet (screen 8) -->
               <div class="calc-strip">
                 <span class="ms fill">lock</span>
                 <span style="flex:1;">न्यूनतम <span class="nums">50% (₹10,000)</span> बैलेंस रखना अनिवार्य है</span>
@@ -1675,7 +1664,7 @@
             <div class="t-section" style="padding-left:4px;">हाल के डेपोजीट लेन-देन</div>
             <div class="spacer-sm"></div>
 
-            <!-- Money entries card — single most-recent entry -->
+            <!-- Money entries card, single most-recent entry -->
             <div class="card" style="padding:8px 16px;">
               <div class="tx-row">
                 <div class="row">
@@ -1702,10 +1691,10 @@
     </div>
 
 <!-- ═══════════════════════════════════════════════════════════
-         FRAME 3 — Transfer Input
+         FRAME 3, Transfer Input
          ═══════════════════════════════════════════════════════════ -->
     <div class="frame" data-step="3">
-      <div class="frame-label"><span class="frame-step">3</span>Top-up — Input</div>
+      <div class="frame-label"><span class="frame-step">3</span>Top-up, Input</div>
       <div class="phone">
         <div class="phone-screen">
           <div class="status-bar">
@@ -1751,7 +1740,7 @@
             <div class="spacer-lg"></div>
             <div class="strip strip-info">
               <span class="ms fill">info</span>
-              <span>यह पैसा डेपोजीट में जाएगा — विड्रॉ नहीं कर सकते, एग्जिट पर मिलेगा</span>
+              <span>यह पैसा डेपोजीट में जाएगा, विड्रॉ नहीं कर सकते, एग्जिट पर मिलेगा</span>
             </div>
             <div class="spacer-sm"></div>
             <div class="strip strip-positive">
@@ -1768,10 +1757,10 @@
     </div>
 
 <!-- ═══════════════════════════════════════════════════════════
-         FRAME 4 — Transfer Confirm Sheet
+         FRAME 4, Transfer Confirm Sheet
          ═══════════════════════════════════════════════════════════ -->
     <div class="frame" data-step="4">
-      <div class="frame-label"><span class="frame-step">4</span>Top-up — Confirm</div>
+      <div class="frame-label"><span class="frame-step">4</span>Top-up, Confirm</div>
       <div class="phone">
         <div class="phone-screen">
 
@@ -1842,10 +1831,10 @@
     </div>
 
 <!-- ═══════════════════════════════════════════════════════════
-         FRAME 5 — Transfer Success
+         FRAME 5, Transfer Success
          ═══════════════════════════════════════════════════════════ -->
     <div class="frame" data-step="5">
-      <div class="frame-label"><span class="frame-step">5</span>Top-up — Success</div>
+      <div class="frame-label"><span class="frame-step">5</span>Top-up, Success</div>
       <div class="phone">
         <div class="phone-screen">
           <div class="status-bar">
@@ -1892,7 +1881,7 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════
-         FRAME 6 — Case A · Device Lost (deduction from security fund)
+         FRAME 6, Case A · Device Lost (deduction from security fund)
          ═══════════════════════════════════════════════════════════ -->
     <div class="frame" data-step="A">
       <div class="frame-label">
@@ -1915,7 +1904,7 @@
           </div>
           <div class="scroll-body">
 
-            <!-- Balance card — Screen 2 structure -->
+            <!-- Balance card, Screen 2 structure -->
             <div class="card" style="padding:20px;">
               <div class="card-head">
                 <span class="ms">savings</span>
@@ -1957,7 +1946,7 @@
             <div class="t-section" style="padding-left:4px;">हाल के डेपोजीट लेन-देन</div>
             <div class="spacer-sm"></div>
 
-            <!-- Money entries — single most-recent (the lost-device deduction) -->
+            <!-- Money entries, single most-recent (the lost-device deduction) -->
             <div class="card" style="padding:8px 16px;">
               <div class="tx-row">
                 <div class="row">
@@ -1979,7 +1968,7 @@
             <div class="t-section" style="padding-left:4px;">नेट-बॉक्स क्रेडिट हिस्ट्री</div>
             <div class="spacer-sm"></div>
 
-            <!-- Credit entries — single most-recent -->
+            <!-- Credit entries, single most-recent -->
             <div class="card" style="padding:8px 16px;">
               <div class="tx-row">
                 <div class="row">
@@ -2006,7 +1995,7 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════
-         FRAME 8 — Case C · Deposit-for-credit (₹200 = 1 credit)
+         FRAME 8, Case C · Deposit-for-credit (₹200 = 1 credit)
          ═══════════════════════════════════════════════════════════ -->
     <div class="frame" data-step="C">
       <div class="frame-label">
@@ -2029,7 +2018,7 @@
           </div>
           <div class="scroll-body">
 
-            <!-- Balance card — Screen 2 structure -->
+            <!-- Balance card, Screen 2 structure -->
             <div class="card" style="padding:20px;">
               <div class="card-head">
                 <span class="ms">savings</span>
@@ -2071,7 +2060,7 @@
             <div class="t-section" style="padding-left:4px;">हाल के डेपोजीट लेन-देन</div>
             <div class="spacer-sm"></div>
 
-            <!-- Money entries — single most-recent (wallet top-up earned credits) -->
+            <!-- Money entries, single most-recent (wallet top-up earned credits) -->
             <div class="card" style="padding:8px 16px;">
               <div class="tx-row">
                 <div class="row">
@@ -2093,7 +2082,7 @@
             <div class="t-section" style="padding-left:4px;">नेट-बॉक्स क्रेडिट हिस्ट्री</div>
             <div class="spacer-sm"></div>
 
-            <!-- Credit entries — single most-recent (the +5 from this top-up) -->
+            <!-- Credit entries, single most-recent (the +5 from this top-up) -->
             <div class="card" style="padding:8px 16px;">
               <div class="tx-row">
                 <div class="row">
@@ -2120,7 +2109,7 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════
-         FRAME 9 — Case D · 50% reserve exhausted (banner + dropdown)
+         FRAME 9, Case D · 50% reserve exhausted (banner + dropdown)
          ═══════════════════════════════════════════════════════════ -->
     <div class="frame" data-step="D" data-auto-modal="exhausted-warning">
       <div class="frame-label">
@@ -2143,7 +2132,7 @@
           </div>
           <div class="scroll-body">
 
-            <!-- Balance card — Screen 2 structure, balance at minimum floor -->
+            <!-- Balance card, Screen 2 structure, balance at minimum floor -->
             <div class="card" style="padding:20px;">
               <div class="card-head">
                 <span class="ms">savings</span>
@@ -2157,7 +2146,7 @@
               </div>
               <div class="spacer-xl"></div>
 
-              <!-- Warning snack — replaces the minimum-balance calc-strip on this case -->
+              <!-- Warning snack, replaces the minimum-balance calc-strip on this case -->
               <div class="exhausted-banner">
                 <span class="ms fill">warning</span>
                 <span><strong>50% रिज़र्व बैलेंस ख़त्म हो गया है।</strong> अब आगे की कटौती सीधे आपके वॉलेट से होगी।</span>
@@ -2187,7 +2176,7 @@
             <div class="t-section" style="padding-left:4px;">हाल के डेपोजीट लेन-देन</div>
             <div class="spacer-sm"></div>
 
-            <!-- Money entries — single wallet-source damage entry -->
+            <!-- Money entries, single wallet-source damage entry -->
             <div class="card" style="padding:8px 16px;">
               <div class="tx-row">
                 <div class="row">
@@ -2209,7 +2198,7 @@
             <div class="t-section" style="padding-left:4px;">नेट-बॉक्स क्रेडिट हिस्ट्री</div>
             <div class="spacer-sm"></div>
 
-            <!-- Credit entries — single most-recent -->
+            <!-- Credit entries, single most-recent -->
             <div class="card" style="padding:8px 16px;">
               <div class="tx-row">
                 <div class="row">
@@ -2236,7 +2225,7 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════
-         FRAME 13 — Case 1 · Deposit screen with auto-popup after 1s
+         FRAME 13, Case 1 · Deposit screen with auto-popup after 1s
          ═══════════════════════════════════════════════════════════ -->
     <div class="frame" data-step="1a" data-auto-modal="received-credits">
       <div class="frame-label">
@@ -2259,7 +2248,7 @@
           </div>
           <div class="scroll-body">
 
-            <!-- Balance card — shows updated 3 credits after returns -->
+            <!-- Balance card, shows updated 3 credits after returns -->
             <div class="card" style="padding:20px;">
               <div class="card-head">
                 <span class="ms">savings</span>
@@ -2322,7 +2311,7 @@
             <div class="t-section" style="padding-left:4px;">नेट-बॉक्स क्रेडिट हिस्ट्री</div>
             <div class="spacer-sm"></div>
 
-            <!-- Credit entries — 3 returns just received -->
+            <!-- Credit entries,3 returns just received -->
             <div class="card" style="padding:8px 16px;">
               <div class="tx-row">
                 <div class="row">
@@ -2349,17 +2338,17 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════
-         V2 FRAMES — Proposed new deposit model
+         V2 FRAMES, Proposed new deposit model
          · Returns → credits, deposit unchanged
          · Custodial loss → ₹1,538 from wallet (Wiom-confirmed)
          · Failed recovery → ₹200 ledger-only forfeit, reversible
          ═══════════════════════════════════════════════════════════ -->
 
-    <!-- FRAME 14 — v2 Main Screen (no 50% rule) -->
+    <!-- FRAME 14, v2 Main Screen (no 50% rule) -->
     <div class="frame" data-step="v2-main">
       <div class="frame-label">
         <span class="frame-step" style="background:#6D17CE;">v2</span>
-        Main Screen — new model
+        Main Screen, new model
       </div>
       <div class="phone">
         <div class="phone-screen">
@@ -2442,11 +2431,11 @@
       </div>
     </div>
 
-    <!-- FRAME 15 — v2 Returns (3 credits, deposit unchanged) -->
+    <!-- FRAME 15, v2 Returns (3 credits, deposit unchanged) -->
     <div class="frame" data-step="v2-returns" data-auto-modal="received-credits">
       <div class="frame-label">
         <span class="frame-step" style="background:#6D17CE;">v2</span>
-        Returns — 3 credits added
+        Returns,3 credits added
       </div>
       <div class="phone">
         <div class="phone-screen">
@@ -2529,11 +2518,11 @@
       </div>
     </div>
 
-    <!-- FRAME 16 — v2 Custodial Loss (₹1,538 from wallet) -->
+    <!-- FRAME 16, v2 Custodial Loss (₹1,538 from wallet) -->
     <div class="frame" data-step="v2-custodial-loss">
       <div class="frame-label">
         <span class="frame-step" style="background:#6D17CE;">v2</span>
-        Custodial Loss — ₹3,076 wallet (2 lost)
+        Custodial Loss, ₹3,076 wallet (2 lost)
       </div>
       <div class="phone">
         <div class="phone-screen">
@@ -2694,13 +2683,13 @@
           <div class="info-sheet-icon positive"><span class="ms fill">redeem</span></div>
           <div class="info-sheet-title">3 नेट-बॉक्स क्रेडिट मिले!</div>
           <div class="info-sheet-body">
-            Wiom को आपके 3 नेट-बॉक्स वापस मिल गए हैं। बधाई हो — आपके खाते में <strong>3 नेट-बॉक्स क्रेडिट</strong> जुड़ गए हैं।
+            Wiom को आपके 3 नेट-बॉक्स वापस मिल गए हैं। बधाई हो, आपके खाते में <strong>3 नेट-बॉक्स क्रेडिट</strong> जुड़ गए हैं।
           </div>
           <div class="spacer-md"></div>
           <div style="font-size:13px; font-weight:700; color:var(--text-primary);">इन क्रेडिट से आप क्या कर सकते हैं:</div>
           <ul class="bullet-list">
             <li>नया नेट-बॉक्स ऑर्डर करते समय ₹200 की जगह 1 क्रेडिट लग जाएगा</li>
-            <li>एक साथ कई क्रेडिट इस्तेमाल कर सकते हैं — जैसे 3 नेट-बॉक्स फ्री में ऑर्डर</li>
+            <li>एक साथ कई क्रेडिट इस्तेमाल कर सकते हैं, जैसे 3 नेट-बॉक्स फ्री में ऑर्डर</li>
             <li>क्रेडिट कभी एक्सपायर नहीं होते</li>
           </ul>
           <div class="spacer-xl"></div>
@@ -2828,7 +2817,7 @@
 
     prevBtn.disabled = true;
 
-    // ── Guidance blink — when the user taps empty space (or a non-functional
+    // ── Guidance blink, when the user taps empty space (or a non-functional
     //    element), highlight every actually-clickable element on screen so the
     //    reviewer can spot where to tap.
     function blinkColor(el) {
@@ -2859,7 +2848,7 @@
       '.nav-arrow, [data-target], [data-modal], [data-back-to-hub], [data-modal-close]';
 
     document.addEventListener('click', (e) => {
-      // If the click hit a functional element, let its own handler fire — no guidance needed.
+      // If the click hit a functional element, let its own handler fire, no guidance needed.
       if (e.target.closest(FUNCTIONAL_SELECTOR)) return;
 
       // Empty / non-functional tap → blink all functional elements within the current view
