@@ -554,22 +554,6 @@
     border-radius: 50%;
     background: var(--brand-primary);
   }
-  /* Numbered variant — replaces the pink dot with a number */
-  .bullet-list.numbered { counter-reset: item; }
-  .bullet-list.numbered li::before {
-    counter-increment: item;
-    content: counter(item) ".";
-    background: transparent;
-    width: 16px;
-    height: auto;
-    border-radius: 0;
-    margin-top: 0;
-    color: var(--brand-primary);
-    font-weight: 700;
-    font-size: 13px;
-    line-height: 1.5;
-    text-align: left;
-  }
 
   /* Primary CTA */
   .cta-primary {
@@ -1226,23 +1210,25 @@
               <span class="ms ms-16">battery_full</span>
             </div>
           </div>
+          <div class="module-header">
+            <div class="icon-btn" style="visibility:hidden;"><span class="ms">arrow_back</span></div>
+            <div class="title">Wiom Deposit Demo</div>
+          </div>
           <div class="scroll-body">
 
             <!-- Welcome card with start button -->
             <div class="welcome-card">
-              <div class="welcome-icon"><span class="ms fill">tips_and_updates</span></div>
-              <div class="welcome-title">Wiom Partner App : Security Deposit cases</div>
+              <div class="welcome-icon" style="background:#E5D5F7; color:#6D17CE;"><span class="ms fill">tips_and_updates</span></div>
+              <div class="welcome-title">Wiom Partner App : Security Deposit (v2)</div>
               <div class="welcome-desc">
-                A walkthrough of the Net-box deposit, including the key edge cases.
+                Proposed new deposit model — no 50% reserve rule. Per-netbox security treated as discrete slots, with credits on return and clearer loss-handling.
               </div>
 
               <div class="welcome-subtitle">What's Covered</div>
               <ul class="bullet-list numbered">
-                <li>Educational cards below the fund section + a supporting bottom sheet with more information</li>
-                <li>Netbox Credit education, along with credit count and transaction details on the screen</li>
-                <li>Lost device deduction transaction</li>
-                <li>New device order entry</li>
-                <li>Warning card and bottom sheet when the partner has exhausted 50% of the balance limit</li>
+                <li>Main deposit screen — active netboxes, return credits, forfeited count</li>
+                <li>Partner returns netboxes → credits added, deposit cash unchanged</li>
+                <li>Custodial loss confirmed by Wiom → full ₹1,538 deducted from wallet</li>
               </ul>
 
               <button class="cta-primary" data-target="1">Start</button>
@@ -1538,810 +1524,40 @@
           </div>
           <div class="module-header">
             <div class="icon-btn" data-target="3"><span class="ms">arrow_back</span></div>
-            <div class="title">Deposit Cases</div>
+            <div class="title">Deposit Cases (v2)</div>
           </div>
           <div class="scroll-body">
 
             <div class="hub-intro">
-              Tap on any case to view different deposit-related scenarios
+              Tap on any case to see how the new model behaves
             </div>
 
             <div class="case-card main" data-target="5">
-              <div class="case-card-num">1</div>
-              <div class="case-card-meta">
-                <div class="title">Main Screen</div>
-                <div class="desc">View main deposit details</div>
-              </div>
-              <span class="ms case-card-chevron">chevron_right</span>
-            </div>
-
-            <div class="case-card" data-target="12">
-              <div class="case-card-num">2</div>
-              <div class="case-card-meta">
-                <div class="title">Partner Returned unused netboxes</div>
-                <div class="desc">Receive Credit points</div>
-              </div>
-              <span class="ms case-card-chevron">chevron_right</span>
-            </div>
-
-            <div class="case-card" data-target="9">
-              <div class="case-card-num">3</div>
-              <div class="case-card-meta">
-                <div class="title">Partner Lost netbox</div>
-                <div class="desc">₹200 deducted from the security fund</div>
-              </div>
-              <span class="ms case-card-chevron">chevron_right</span>
-            </div>
-
-            <div class="case-card" data-target="11">
-              <div class="case-card-num">4</div>
-              <div class="case-card-meta">
-                <div class="title">50% Reserve exhausted</div>
-                <div class="desc">Warning of the future deductions</div>
-              </div>
-              <span class="ms case-card-chevron">chevron_right</span>
-            </div>
-
-            <div class="hub-section-title" style="margin-top:20px;">v2 — Proposed New Model</div>
-
-            <div class="case-card" data-target="13">
               <div class="case-card-num" style="background:#6D17CE;">1</div>
               <div class="case-card-meta">
-                <div class="title">Main Screen (v2)</div>
-                <div class="desc">No 50% rule — per-netbox security model</div>
+                <div class="title">Main Screen</div>
+                <div class="desc">Per-netbox accounting · active / credits / forfeited</div>
               </div>
               <span class="ms case-card-chevron">chevron_right</span>
             </div>
 
-            <div class="case-card" data-target="14">
+            <div class="case-card" data-target="6">
               <div class="case-card-num" style="background:#6D17CE;">2</div>
               <div class="case-card-meta">
-                <div class="title">Returns (v2)</div>
+                <div class="title">Returns</div>
                 <div class="desc">3 credits added — deposit untouched</div>
               </div>
               <span class="ms case-card-chevron">chevron_right</span>
             </div>
 
-            <div class="case-card" data-target="15">
+            <div class="case-card" data-target="7">
               <div class="case-card-num" style="background:#6D17CE;">3</div>
               <div class="case-card-meta">
-                <div class="title">Custodial Loss (v2)</div>
+                <div class="title">Custodial Loss</div>
                 <div class="desc">Wiom-confirmed loss · ₹1,538 from wallet</div>
               </div>
               <span class="ms case-card-chevron">chevron_right</span>
             </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         FRAME 5 — Deposit Detail
-         ═══════════════════════════════════════════════════════════ -->
-    <div class="frame" data-step="2">
-      <div class="frame-label"><span class="frame-step">2</span>Deposit Detail</div>
-      <div class="phone">
-        <div class="phone-screen">
-          <div class="status-bar">
-            <span>9:41</span>
-            <div class="status-right">
-              <span class="ms ms-16">signal_cellular_alt</span>
-              <span class="ms ms-16">wifi</span>
-              <span class="ms ms-16">battery_full</span>
-            </div>
-          </div>
-          <div class="module-header">
-            <div class="icon-btn" data-target="4"><span class="ms">arrow_back</span></div>
-            <div class="title">नेट-बॉक्स डेपोजीट</div>
-          </div>
-          <div class="scroll-body">
-
-            <!-- Balance card — header + hero + minimum + stats -->
-            <div class="card" style="padding:20px;">
-              <div class="card-head">
-                <span class="ms">savings</span>
-                <div class="title">बैलेंस</div>
-              </div>
-              <div class="spacer-xl"></div>
-              <div class="stack">
-                <div class="t-hero">₹20,000</div>
-                <div class="spacer-xs"></div>
-                <div class="t-body-sm">नेट-बॉक्स डेपोजीट</div>
-              </div>
-              <div class="spacer-xl"></div>
-
-              <!-- Educational calc strip — info icon opens locked-fund sheet (screen 8) -->
-              <div class="calc-strip">
-                <span class="ms fill">lock</span>
-                <span style="flex:1;">न्यूनतम <span class="nums">50% (₹10,000)</span> बैलेंस रखना अनिवार्य है</span>
-                <span class="info-icon" data-modal="locked-fund" title="सुरक्षित फंड क्यों रखा जाता है?"><span class="ms">info</span></span>
-              </div>
-
-              <div class="spacer-lg"></div>
-
-              <div class="kv-row">
-                <span class="k">कुल नेट-बॉक्स</span>
-                <span class="v">100</span>
-              </div>
-              <div class="spacer-md"></div>
-              <div class="kv-row">
-                <span class="k">वापसी बाकी</span>
-                <span class="v warning">2</span>
-              </div>
-            </div>
-
-            <div class="spacer-lg"></div>
-            <div class="t-section" style="padding-left:4px;">हाल के डेपोजीट लेन-देन</div>
-            <div class="spacer-sm"></div>
-
-            <!-- Money entries card — single most-recent entry -->
-            <div class="card" style="padding:8px 16px;">
-              <div class="tx-row">
-                <div class="row">
-                  <span class="t-card-id">शुरुआती डेपोजीट</span>
-                  <span class="tx-amount credit">+₹20,000</span>
-                </div>
-                <div class="tx-meta">
-                  <span class="left">5 अप्रैल · 100 नेट-बॉक्स</span>
-                  <span class="pill pill-warning">एग्जिट पर मिलेगा</span>
-                </div>
-              </div>
-              <div class="nav-footer">
-                <span class="t-cta">सभी लेन-देन देखें</span>
-                <span class="t-cta arrow">&nbsp;›</span>
-              </div>
-            </div>
-
-            <div class="spacer-lg"></div>
-            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-<!-- ═══════════════════════════════════════════════════════════
-         FRAME 3 — Transfer Input
-         ═══════════════════════════════════════════════════════════ -->
-    <div class="frame" data-step="3">
-      <div class="frame-label"><span class="frame-step">3</span>Top-up — Input</div>
-      <div class="phone">
-        <div class="phone-screen">
-          <div class="status-bar">
-            <span>9:41</span>
-            <div class="status-right">
-              <span class="ms ms-16">signal_cellular_alt</span>
-              <span class="ms ms-16">wifi</span>
-              <span class="ms ms-16">battery_full</span>
-            </div>
-          </div>
-          <div class="module-header">
-            <div class="icon-btn" data-target="5"><span class="ms">arrow_back</span></div>
-            <div class="title">नेट-बॉक्स डेपोजीट टॉप-अप</div>
-          </div>
-          <div class="scroll-body">
-
-            <div class="kv-row">
-              <span class="k">वॉलेट में</span>
-              <span class="v">₹2,840</span>
-            </div>
-            <div class="spacer-sm"></div>
-            <div class="kv-row">
-              <span class="k">डेपोजीट में</span>
-              <span class="v">₹20,000</span>
-            </div>
-
-            <div class="spacer-lg"></div>
-
-            <div class="amount-field focus">
-              <span class="prefix">₹</span>
-              <input type="text" value="1,000" />
-            </div>
-
-            <div class="spacer-md"></div>
-            <div class="t-body-sm" style="padding-left:2px;">झटपट रकम</div>
-            <div class="spacer-sm"></div>
-            <div class="quick-chips">
-              <button class="qchip">₹500</button>
-              <button class="qchip active">₹1,000</button>
-              <button class="qchip">₹2,000</button>
-            </div>
-
-            <div class="spacer-lg"></div>
-            <div class="strip strip-info">
-              <span class="ms fill">info</span>
-              <span>यह पैसा डेपोजीट में जाएगा — विड्रॉ नहीं कर सकते, एग्जिट पर मिलेगा</span>
-            </div>
-            <div class="spacer-sm"></div>
-            <div class="strip strip-positive">
-              <span class="ms fill">redeem</span>
-              <span>इस जमा से आपको <strong>5 नेट-बॉक्स क्रेडिट</strong> भी मिलेंगे (हर ₹200 = 1 क्रेडिट)</span>
-            </div>
-
-            <div class="spacer-xl"></div>
-            <button class="cta-primary" data-target="7">डेपोजीट में टॉप-अप करें</button>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-<!-- ═══════════════════════════════════════════════════════════
-         FRAME 4 — Transfer Confirm Sheet
-         ═══════════════════════════════════════════════════════════ -->
-    <div class="frame" data-step="4">
-      <div class="frame-label"><span class="frame-step">4</span>Top-up — Confirm</div>
-      <div class="phone">
-        <div class="phone-screen">
-
-          <!-- Faded base behind sheet -->
-          <div class="status-bar">
-            <span>9:41</span>
-            <div class="status-right">
-              <span class="ms ms-16">signal_cellular_alt</span>
-              <span class="ms ms-16">wifi</span>
-              <span class="ms ms-16">battery_full</span>
-            </div>
-          </div>
-          <div class="module-header">
-            <div class="icon-btn" data-target="6"><span class="ms">arrow_back</span></div>
-            <div class="title">नेट-बॉक्स डेपोजीट टॉप-अप</div>
-          </div>
-          <div class="scroll-body" style="opacity:0.6;">
-            <div class="kv-row">
-              <span class="k">वॉलेट में</span>
-              <span class="v">₹2,840</span>
-            </div>
-            <div class="spacer-sm"></div>
-            <div class="kv-row">
-              <span class="k">डेपोजीट में</span>
-              <span class="v">₹20,000</span>
-            </div>
-            <div class="spacer-lg"></div>
-            <div class="amount-field">
-              <span class="prefix">₹</span>
-              <input type="text" value="1,000" />
-            </div>
-          </div>
-
-          <!-- Backdrop + sheet -->
-          <div class="bs-backdrop">
-            <div class="bs-sheet">
-              <div class="bs-handle"></div>
-
-              <div class="t-section" style="font-size:16px;">टॉप-अप पक्का करें</div>
-              <div class="spacer-lg"></div>
-              <div class="t-hero">₹1,000</div>
-              <div class="spacer-xs"></div>
-              <div class="t-body-sm">वॉलेट → डेपोजीट</div>
-              <div class="spacer-lg"></div>
-
-              <div class="kv-row">
-                <span class="k">वॉलेट में</span>
-                <span class="v">₹1,840</span>
-              </div>
-              <div class="spacer-sm"></div>
-              <div class="kv-row">
-                <span class="k">डेपोजीट में</span>
-                <span class="v">₹21,000</span>
-              </div>
-
-              <div class="spacer-md"></div>
-              <div class="t-body-sm hint">डेपोजीट एग्जिट पर मिलेगा</div>
-
-              <div class="spacer-xxl"></div>
-              <button class="cta-primary" data-target="8">हाँ, टॉप-अप करें</button>
-              <div class="spacer-sm"></div>
-              <button class="cta-secondary" data-target="6">वापस</button>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-<!-- ═══════════════════════════════════════════════════════════
-         FRAME 5 — Transfer Success
-         ═══════════════════════════════════════════════════════════ -->
-    <div class="frame" data-step="5">
-      <div class="frame-label"><span class="frame-step">5</span>Top-up — Success</div>
-      <div class="phone">
-        <div class="phone-screen">
-          <div class="status-bar">
-            <span>9:41</span>
-            <div class="status-right">
-              <span class="ms ms-16">signal_cellular_alt</span>
-              <span class="ms ms-16">wifi</span>
-              <span class="ms ms-16">battery_full</span>
-            </div>
-          </div>
-          <div class="module-header">
-            <div class="icon-btn" data-target="5"><span class="ms">arrow_back</span></div>
-            <div class="title">नेट-बॉक्स डेपोजीट टॉप-अप</div>
-          </div>
-
-          <div class="center-pad">
-            <div class="success-check"><span class="ms fill">check</span></div>
-            <div class="spacer-xl"></div>
-            <div class="t-hero">₹1,000</div>
-            <div class="spacer-sm"></div>
-            <div class="t-body" style="color:var(--text-secondary);">डेपोजीट में आ गया</div>
-
-            <div class="spacer-xl"></div>
-
-            <div class="card" style="width:100%; text-align:left;">
-              <div class="kv-row">
-                <span class="k">नेट-बॉक्स डेपोजीट</span>
-                <span class="v">₹21,000</span>
-              </div>
-              <div class="spacer-sm"></div>
-              <div class="kv-row">
-                <span class="k">निकाल सकते हैं</span>
-                <span class="v">₹1,840</span>
-              </div>
-            </div>
-          </div>
-
-          <div style="padding: 16px 20px 24px;">
-            <button class="cta-primary" data-target="5">डेपोजीट पर वापस</button>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         FRAME 6 — Case A · Device Lost (deduction from security fund)
-         ═══════════════════════════════════════════════════════════ -->
-    <div class="frame" data-step="A">
-      <div class="frame-label">
-        <span class="frame-step" style="background:var(--state-negative);">A</span>
-        Case · नेट-बॉक्स लॉस्ट
-      </div>
-      <div class="phone">
-        <div class="phone-screen">
-          <div class="status-bar">
-            <span>9:41</span>
-            <div class="status-right">
-              <span class="ms ms-16">signal_cellular_alt</span>
-              <span class="ms ms-16">wifi</span>
-              <span class="ms ms-16">battery_full</span>
-            </div>
-          </div>
-          <div class="module-header">
-            <div class="icon-btn" data-back-to-hub><span class="ms">arrow_back</span></div>
-            <div class="title">नेट-बॉक्स डेपोजीट</div>
-          </div>
-          <div class="scroll-body">
-
-            <!-- Balance card — Screen 2 structure -->
-            <div class="card" style="padding:20px;">
-              <div class="card-head">
-                <span class="ms">savings</span>
-                <div class="title">बैलेंस</div>
-              </div>
-              <div class="spacer-xl"></div>
-              <div class="stack">
-                <div class="t-hero">₹19,800</div>
-                <div class="spacer-xs"></div>
-                <div class="t-body-sm">नेट-बॉक्स डेपोजीट</div>
-              </div>
-              <div class="spacer-xl"></div>
-              <div class="calc-strip">
-                <span class="ms fill">lock</span>
-                <span style="flex:1;">न्यूनतम <span class="nums">50% (₹10,000)</span> बैलेंस रखना अनिवार्य है</span>
-                <span class="info-icon" data-modal="locked-fund" title="सुरक्षित फंड क्यों रखा जाता है?"><span class="ms">info</span></span>
-              </div>
-              <div class="spacer-lg"></div>
-              <div class="kv-row">
-                <span class="k">कुल नेट-बॉक्स</span>
-                <span class="v">99</span>
-              </div>
-              <div class="spacer-md"></div>
-              <div class="kv-row">
-                <span class="k">वापसी बाकी</span>
-                <span class="v warning">2</span>
-              </div>
-              <div class="spacer-md"></div>
-              <div class="kv-row credit-only">
-                <span class="k with-info">
-                  नेट-बॉक्स क्रेडिट
-                  <span class="info-icon" data-modal="credit" title="नेट-बॉक्स क्रेडिट क्या है?"><span class="ms">info</span></span>
-                </span>
-                <span class="v">3</span>
-              </div>
-            </div>
-
-            <div class="spacer-lg"></div>
-            <div class="t-section" style="padding-left:4px;">हाल के डेपोजीट लेन-देन</div>
-            <div class="spacer-sm"></div>
-
-            <!-- Money entries — single most-recent (the lost-device deduction) -->
-            <div class="card" style="padding:8px 16px;">
-              <div class="tx-row">
-                <div class="row">
-                  <span class="t-card-id" style="color:var(--state-negative);">नेट-बॉक्स लॉस्ट · कटौती</span>
-                  <span class="tx-amount debit">−₹200</span>
-                </div>
-                <div class="tx-meta">
-                  <span class="left">आज · NB#10288</span>
-                  <span class="pill pill-negative">सुरक्षित फंड से कटा</span>
-                </div>
-              </div>
-              <div class="nav-footer">
-                <span class="t-cta">सभी लेन-देन देखें</span>
-                <span class="t-cta arrow">&nbsp;›</span>
-              </div>
-            </div>
-
-            <div class="spacer-lg"></div>
-            <div class="t-section" style="padding-left:4px;">नेट-बॉक्स क्रेडिट हिस्ट्री</div>
-            <div class="spacer-sm"></div>
-
-            <!-- Credit entries — single most-recent -->
-            <div class="card" style="padding:8px 16px;">
-              <div class="tx-row">
-                <div class="row">
-                  <span class="t-card-id" style="color:var(--state-positive);">नेट-बॉक्स क्रेडिट मिला</span>
-                  <span class="tx-amount credit">+1 क्रेडिट</span>
-                </div>
-                <div class="tx-meta">
-                  <span class="left">1 मई · NB#09887 वापस</span>
-                  <span class="pill pill-positive">क्रेडिट जुड़ा</span>
-                </div>
-              </div>
-              <div class="nav-footer">
-                <span class="t-cta">सभी क्रेडिट देखें</span>
-                <span class="t-cta arrow">&nbsp;›</span>
-              </div>
-            </div>
-
-            <div class="spacer-lg"></div>
-            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         FRAME 8 — Case C · Deposit-for-credit (₹200 = 1 credit)
-         ═══════════════════════════════════════════════════════════ -->
-    <div class="frame" data-step="C">
-      <div class="frame-label">
-        <span class="frame-step" style="background:var(--state-positive);">C</span>
-        Case · डेपोजीट → क्रेडिट
-      </div>
-      <div class="phone">
-        <div class="phone-screen">
-          <div class="status-bar">
-            <span>9:41</span>
-            <div class="status-right">
-              <span class="ms ms-16">signal_cellular_alt</span>
-              <span class="ms ms-16">wifi</span>
-              <span class="ms ms-16">battery_full</span>
-            </div>
-          </div>
-          <div class="module-header">
-            <div class="icon-btn" data-back-to-hub><span class="ms">arrow_back</span></div>
-            <div class="title">नेट-बॉक्स डेपोजीट</div>
-          </div>
-          <div class="scroll-body">
-
-            <!-- Balance card — Screen 2 structure -->
-            <div class="card" style="padding:20px;">
-              <div class="card-head">
-                <span class="ms">savings</span>
-                <div class="title">बैलेंस</div>
-              </div>
-              <div class="spacer-xl"></div>
-              <div class="stack">
-                <div class="t-hero">₹21,000</div>
-                <div class="spacer-xs"></div>
-                <div class="t-body-sm">नेट-बॉक्स डेपोजीट</div>
-              </div>
-              <div class="spacer-xl"></div>
-              <div class="calc-strip">
-                <span class="ms fill">lock</span>
-                <span style="flex:1;">न्यूनतम <span class="nums">50% (₹10,500)</span> बैलेंस रखना अनिवार्य है</span>
-                <span class="info-icon" data-modal="locked-fund" title="सुरक्षित फंड क्यों रखा जाता है?"><span class="ms">info</span></span>
-              </div>
-              <div class="spacer-lg"></div>
-              <div class="kv-row">
-                <span class="k">कुल नेट-बॉक्स</span>
-                <span class="v">100</span>
-              </div>
-              <div class="spacer-md"></div>
-              <div class="kv-row">
-                <span class="k">वापसी बाकी</span>
-                <span class="v warning">2</span>
-              </div>
-              <div class="spacer-md"></div>
-              <div class="kv-row credit-only">
-                <span class="k with-info">
-                  नेट-बॉक्स क्रेडिट
-                  <span class="info-icon" data-modal="credit" title="नेट-बॉक्स क्रेडिट क्या है?"><span class="ms">info</span></span>
-                </span>
-                <span class="v">8</span>
-              </div>
-            </div>
-
-            <div class="spacer-lg"></div>
-            <div class="t-section" style="padding-left:4px;">हाल के डेपोजीट लेन-देन</div>
-            <div class="spacer-sm"></div>
-
-            <!-- Money entries — single most-recent (wallet top-up earned credits) -->
-            <div class="card" style="padding:8px 16px;">
-              <div class="tx-row">
-                <div class="row">
-                  <span class="t-card-id" style="color:var(--state-positive);">वॉलेट से टॉप-अप · 5 क्रेडिट मिले</span>
-                  <span class="tx-amount credit">+₹1,000</span>
-                </div>
-                <div class="tx-meta">
-                  <span class="left">आज · डेपोजीट जमा</span>
-                  <span class="pill pill-positive">+5 क्रेडिट</span>
-                </div>
-              </div>
-              <div class="nav-footer">
-                <span class="t-cta">सभी लेन-देन देखें</span>
-                <span class="t-cta arrow">&nbsp;›</span>
-              </div>
-            </div>
-
-            <div class="spacer-lg"></div>
-            <div class="t-section" style="padding-left:4px;">नेट-बॉक्स क्रेडिट हिस्ट्री</div>
-            <div class="spacer-sm"></div>
-
-            <!-- Credit entries — single most-recent (the +5 from this top-up) -->
-            <div class="card" style="padding:8px 16px;">
-              <div class="tx-row">
-                <div class="row">
-                  <span class="t-card-id" style="color:var(--state-positive);">डेपोजीट से 5 क्रेडिट मिले</span>
-                  <span class="tx-amount credit">+5 क्रेडिट</span>
-                </div>
-                <div class="tx-meta">
-                  <span class="left">आज · ₹1,000 जमा</span>
-                  <span class="pill pill-positive">क्रेडिट जुड़ा</span>
-                </div>
-              </div>
-              <div class="nav-footer">
-                <span class="t-cta">सभी क्रेडिट देखें</span>
-                <span class="t-cta arrow">&nbsp;›</span>
-              </div>
-            </div>
-
-            <div class="spacer-lg"></div>
-            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         FRAME 9 — Case D · 50% reserve exhausted (banner + dropdown)
-         ═══════════════════════════════════════════════════════════ -->
-    <div class="frame" data-step="D" data-auto-modal="exhausted-warning">
-      <div class="frame-label">
-        <span class="frame-step" style="background:var(--state-warning);">D</span>
-        Case · 50% रिज़र्व ख़त्म
-      </div>
-      <div class="phone">
-        <div class="phone-screen">
-          <div class="status-bar">
-            <span>9:41</span>
-            <div class="status-right">
-              <span class="ms ms-16">signal_cellular_alt</span>
-              <span class="ms ms-16">wifi</span>
-              <span class="ms ms-16">battery_full</span>
-            </div>
-          </div>
-          <div class="module-header">
-            <div class="icon-btn" data-back-to-hub><span class="ms">arrow_back</span></div>
-            <div class="title">नेट-बॉक्स डेपोजीट</div>
-          </div>
-          <div class="scroll-body">
-
-            <!-- Balance card — Screen 2 structure, balance at minimum floor -->
-            <div class="card" style="padding:20px;">
-              <div class="card-head">
-                <span class="ms">savings</span>
-                <div class="title">बैलेंस</div>
-              </div>
-              <div class="spacer-xl"></div>
-              <div class="stack">
-                <div class="t-hero">₹10,000</div>
-                <div class="spacer-xs"></div>
-                <div class="t-body-sm">नेट-बॉक्स डेपोजीट</div>
-              </div>
-              <div class="spacer-xl"></div>
-
-              <!-- Warning snack — replaces the minimum-balance calc-strip on this case -->
-              <div class="exhausted-banner">
-                <span class="ms fill">warning</span>
-                <span><strong>50% रिज़र्व बैलेंस ख़त्म हो गया है।</strong> अब आगे की कटौती सीधे आपके वॉलेट से होगी।</span>
-              </div>
-
-              <div class="spacer-lg"></div>
-              <div class="kv-row">
-                <span class="k">कुल नेट-बॉक्स</span>
-                <span class="v">48</span>
-              </div>
-              <div class="spacer-md"></div>
-              <div class="kv-row">
-                <span class="k">वापसी बाकी</span>
-                <span class="v warning">2</span>
-              </div>
-              <div class="spacer-md"></div>
-              <div class="kv-row credit-only">
-                <span class="k with-info">
-                  नेट-बॉक्स क्रेडिट
-                  <span class="info-icon" data-modal="credit" title="नेट-बॉक्स क्रेडिट क्या है?"><span class="ms">info</span></span>
-                </span>
-                <span class="v">3</span>
-              </div>
-            </div>
-
-            <div class="spacer-lg"></div>
-            <div class="t-section" style="padding-left:4px;">हाल के डेपोजीट लेन-देन</div>
-            <div class="spacer-sm"></div>
-
-            <!-- Money entries — single wallet-source damage entry -->
-            <div class="card" style="padding:8px 16px;">
-              <div class="tx-row">
-                <div class="row">
-                  <span class="t-card-id" style="color:var(--state-negative);">नेट-बॉक्स क्षति · कटौती</span>
-                  <span class="tx-amount debit">−₹200</span>
-                </div>
-                <div class="tx-meta">
-                  <span class="left">आज · NB#10301</span>
-                  <span class="pill pill-negative">वॉलेट से कटा</span>
-                </div>
-              </div>
-              <div class="nav-footer">
-                <span class="t-cta">सभी लेन-देन देखें</span>
-                <span class="t-cta arrow">&nbsp;›</span>
-              </div>
-            </div>
-
-            <div class="spacer-lg"></div>
-            <div class="t-section" style="padding-left:4px;">नेट-बॉक्स क्रेडिट हिस्ट्री</div>
-            <div class="spacer-sm"></div>
-
-            <!-- Credit entries — single most-recent -->
-            <div class="card" style="padding:8px 16px;">
-              <div class="tx-row">
-                <div class="row">
-                  <span class="t-card-id" style="color:var(--state-positive);">नेट-बॉक्स क्रेडिट मिला</span>
-                  <span class="tx-amount credit">+1 क्रेडिट</span>
-                </div>
-                <div class="tx-meta">
-                  <span class="left">1 मई · NB#09887 वापस</span>
-                  <span class="pill pill-positive">क्रेडिट जुड़ा</span>
-                </div>
-              </div>
-              <div class="nav-footer">
-                <span class="t-cta">सभी क्रेडिट देखें</span>
-                <span class="t-cta arrow">&nbsp;›</span>
-              </div>
-            </div>
-
-            <div class="spacer-lg"></div>
-            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
-
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════════════════════════════
-         FRAME 13 — Case 1 · Deposit screen with auto-popup after 1s
-         ═══════════════════════════════════════════════════════════ -->
-    <div class="frame" data-step="1a" data-auto-modal="received-credits">
-      <div class="frame-label">
-        <span class="frame-step" style="background:var(--state-positive);">1</span>
-        Case · Deposit with auto-popup
-      </div>
-      <div class="phone">
-        <div class="phone-screen">
-          <div class="status-bar">
-            <span>9:41</span>
-            <div class="status-right">
-              <span class="ms ms-16">signal_cellular_alt</span>
-              <span class="ms ms-16">wifi</span>
-              <span class="ms ms-16">battery_full</span>
-            </div>
-          </div>
-          <div class="module-header">
-            <div class="icon-btn" data-target="4"><span class="ms">arrow_back</span></div>
-            <div class="title">नेट-बॉक्स डेपोजीट</div>
-          </div>
-          <div class="scroll-body">
-
-            <!-- Balance card — shows updated 3 credits after returns -->
-            <div class="card" style="padding:20px;">
-              <div class="card-head">
-                <span class="ms">savings</span>
-                <div class="title">बैलेंस</div>
-              </div>
-              <div class="spacer-xl"></div>
-              <div class="stack">
-                <div class="t-hero">₹20,000</div>
-                <div class="spacer-xs"></div>
-                <div class="t-body-sm">नेट-बॉक्स डेपोजीट</div>
-              </div>
-              <div class="spacer-xl"></div>
-              <div class="calc-strip">
-                <span class="ms fill">lock</span>
-                <span style="flex:1;">न्यूनतम <span class="nums">50% (₹10,000)</span> बैलेंस रखना अनिवार्य है</span>
-                <span class="info-icon" data-modal="locked-fund" title="सुरक्षित फंड क्यों रखा जाता है?"><span class="ms">info</span></span>
-              </div>
-              <div class="spacer-lg"></div>
-              <div class="kv-row">
-                <span class="k">कुल नेट-बॉक्स</span>
-                <span class="v">100</span>
-              </div>
-              <div class="spacer-md"></div>
-              <div class="kv-row">
-                <span class="k">वापसी बाकी</span>
-                <span class="v warning">2</span>
-              </div>
-              <div class="spacer-md"></div>
-              <div class="kv-row credit-only">
-                <span class="k with-info">
-                  नेट-बॉक्स क्रेडिट
-                  <span class="info-icon" data-modal="credit" title="नेट-बॉक्स क्रेडिट क्या है?"><span class="ms">info</span></span>
-                </span>
-                <span class="v">3</span>
-              </div>
-            </div>
-
-            <div class="spacer-lg"></div>
-            <div class="t-section" style="padding-left:4px;">हाल के डेपोजीट लेन-देन</div>
-            <div class="spacer-sm"></div>
-
-            <div class="card" style="padding:8px 16px;">
-              <div class="tx-row">
-                <div class="row">
-                  <span class="t-card-id">शुरुआती डेपोजीट</span>
-                  <span class="tx-amount credit">+₹20,000</span>
-                </div>
-                <div class="tx-meta">
-                  <span class="left">5 अप्रैल · 100 नेट-बॉक्स</span>
-                  <span class="pill pill-warning">एग्जिट पर मिलेगा</span>
-                </div>
-              </div>
-              <div class="nav-footer">
-                <span class="t-cta">सभी लेन-देन देखें</span>
-                <span class="t-cta arrow">&nbsp;›</span>
-              </div>
-            </div>
-
-            <div class="spacer-lg"></div>
-            <div class="t-section" style="padding-left:4px;">नेट-बॉक्स क्रेडिट हिस्ट्री</div>
-            <div class="spacer-sm"></div>
-
-            <!-- Credit entries — 3 returns just received -->
-            <div class="card" style="padding:8px 16px;">
-              <div class="tx-row">
-                <div class="row">
-                  <span class="t-card-id" style="color:var(--state-positive);">3 नेट-बॉक्स वापस · क्रेडिट मिले</span>
-                  <span class="tx-amount credit">+3 क्रेडिट</span>
-                </div>
-                <div class="tx-meta">
-                  <span class="left">आज · NB#09887, 09760, 09231</span>
-                  <span class="pill pill-positive">क्रेडिट जुड़ा</span>
-                </div>
-              </div>
-              <div class="nav-footer">
-                <span class="t-cta">सभी क्रेडिट देखें</span>
-                <span class="t-cta arrow">&nbsp;›</span>
-              </div>
-            </div>
-
-            <div class="spacer-lg"></div>
-            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
 
           </div>
         </div>
@@ -2434,9 +1650,6 @@
               </div>
             </div>
 
-            <div class="spacer-lg"></div>
-            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
-
           </div>
         </div>
       </div>
@@ -2521,9 +1734,6 @@
               </div>
             </div>
 
-            <div class="spacer-lg"></div>
-            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
-
           </div>
         </div>
       </div>
@@ -2607,14 +1817,10 @@
               </div>
             </div>
 
-            <div class="spacer-lg"></div>
-            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
-
           </div>
         </div>
       </div>
     </div>
-
   </div><!-- /.stage -->
 
   <!-- Navigation -->
