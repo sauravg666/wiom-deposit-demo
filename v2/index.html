@@ -1,0 +1,3018 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wiom — Paise &amp; Security Deposit flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Material+Symbols+Outlined" rel="stylesheet" />
+<style>
+  :root {
+    /* Wiom DS tokens */
+    --brand-primary: #D9008D;
+    --brand-primary-pressed: #A30070;
+    --brand-primary-subtle: #FFCCED;
+
+    --text-primary: #161021;
+    --text-secondary: #5C5570;
+    --text-hint: #A7A1B2;
+
+    --bg-screen: #FAF9FC;
+    --bg-surface: #FFFFFF;
+    --bg-positive: #E1FAED;
+    --bg-negative: #FFE5E7;
+    --bg-warning: #FFF2BF;
+    --bg-info: #F1E5FF;
+
+    --state-positive: #008043;
+    --state-negative: #D92130;
+    --state-warning: #B85C00;
+    --state-info: #6D17CE;
+
+    --stroke-primary: #E8E4F0;
+    --input-border: #D7D3E0;
+
+    /* spacing scale */
+    --s-xxs: 2px;
+    --s-xs: 4px;
+    --s-sm: 8px;
+    --s-md: 12px;
+    --s-lg: 16px;
+    --s-xl: 24px;
+    --s-xxl: 32px;
+
+    /* radius */
+    --r-chip: 999px;
+    --r-card: 12px;
+    --r-large: 16px;
+    --r-xlarge: 24px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #f1f0f4;
+    font-family: 'Inter', 'Noto Sans Devanagari', system-ui, -apple-system, Segoe UI, sans-serif;
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px 24px 24px;
+  }
+
+  .page-head {
+    text-align: center;
+    margin-bottom: 24px;
+    max-width: 560px;
+  }
+  .page-head h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 6px;
+    letter-spacing: -0.01em;
+  }
+  .page-head p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .brand-dot {
+    display: inline-block;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--brand-primary);
+    vertical-align: 1px;
+    margin-right: 6px;
+  }
+
+  /* Single-frame stage */
+  .stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex: 1;
+  }
+
+  .frame {
+    width: 380px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+  }
+  .frame.active {
+    display: flex;
+  }
+  .frame-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    justify-content: center;
+  }
+  .frame-step {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border-radius: 999px;
+    background: var(--brand-primary);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  .frame-caption {
+    margin-top: 16px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    max-width: 380px;
+    text-align: center;
+  }
+
+  /* Nav bar */
+  .nav {
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: #fff;
+    border: 1px solid var(--stroke-primary);
+    border-radius: 999px;
+    padding: 6px;
+    box-shadow: 0 4px 16px rgba(20, 16, 33, 0.06);
+  }
+  .nav-arrow {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: none;
+    background: var(--brand-primary);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 120ms ease, transform 120ms ease;
+  }
+  .nav-arrow:hover { background: var(--brand-primary-pressed); }
+  .nav-arrow:active { transform: scale(0.96); }
+  .nav-arrow:disabled {
+    background: var(--input-border);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  .nav-arrow .ms { font-size: 22px; }
+  .nav-counter {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    min-width: 80px;
+    text-align: center;
+  }
+  .nav-counter .total { color: var(--text-hint); }
+  .nav-dots {
+    display: flex;
+    gap: 6px;
+    padding: 0 6px;
+  }
+  .nav-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--input-border);
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    transition: background 120ms ease, width 120ms ease;
+  }
+  .nav-dot.active {
+    background: var(--brand-primary);
+    width: 20px;
+  }
+
+  /* Phone shell */
+  .phone {
+    width: 380px;
+    height: 780px;
+    background: #1c1a20;
+    border-radius: 38px;
+    padding: 12px;
+    box-shadow:
+      0 1px 2px rgba(20, 16, 33, 0.08),
+      0 24px 56px rgba(20, 16, 33, 0.14);
+    position: relative;
+  }
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    background: var(--bg-screen);
+    border-radius: 28px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .status-bar {
+    height: 28px;
+    background: var(--bg-screen);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 22px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .status-bar .status-right {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .module-header {
+    height: 56px;
+    padding: 0 12px 0 4px;
+    display: flex;
+    align-items: center;
+    background: var(--bg-screen);
+    gap: 4px;
+  }
+  .icon-btn {
+    width: 44px; height: 44px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 999px;
+    color: var(--text-primary);
+  }
+  .icon-btn .ms { font-size: 24px; }
+  .module-header .title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-left: 4px;
+  }
+
+  /* Scrollable body — mimics phone scroll for screens with long content / bottom CTAs */
+  .scroll-body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 8px 16px 24px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(20, 16, 33, 0.18) transparent;
+  }
+
+  /* Card */
+  .card {
+    background: var(--bg-surface);
+    border: 1px solid var(--stroke-primary);
+    border-radius: var(--r-large);
+    padding: 16px;
+  }
+  .card + .card { margin-top: 16px; }
+
+  /* Material Symbols */
+  .ms {
+    font-family: 'Material Symbols Outlined';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 20px;
+    display: inline-block;
+    line-height: 1;
+    -webkit-font-feature-settings: 'liga';
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .ms.fill { font-variation-settings: 'FILL' 1; }
+  .ms-16 { font-size: 16px; }
+  .ms-20 { font-size: 20px; }
+  .ms-24 { font-size: 24px; }
+  .ms-32 { font-size: 32px; }
+
+  /* Typography helpers */
+  .t-hero {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    color: var(--text-primary);
+  }
+  .t-title-sm { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+  .t-card-id { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .t-body { font-size: 14px; font-weight: 400; color: var(--text-primary); }
+  .t-body-sm { font-size: 12px; font-weight: 400; color: var(--text-secondary); line-height: 1.45; }
+  .t-cta { font-size: 14px; font-weight: 600; color: var(--brand-primary); }
+  .t-section { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .muted { color: var(--text-secondary); }
+  .hint { color: var(--text-hint); }
+  .positive { color: var(--state-positive); }
+  .negative { color: var(--state-negative); }
+  .warning { color: var(--state-warning); }
+  .info { color: var(--state-info); }
+
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .row-tight { display: flex; align-items: center; gap: 8px; }
+  .stack { display: flex; flex-direction: column; align-items: center; }
+
+  .spacer-xs { height: 4px; } .spacer-sm { height: 8px; }
+  .spacer-md { height: 12px; } .spacer-lg { height: 16px; }
+  .spacer-xl { height: 24px; } .spacer-xxl { height: 32px; }
+
+  .divider {
+    height: 1px;
+    background: var(--stroke-primary);
+    margin: 12px 0;
+  }
+
+  /* Eligibility line */
+  .eligibility {
+    display: flex; align-items: center; gap: 8px;
+    color: var(--state-positive);
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .eligibility .ms { color: var(--state-positive); font-size: 16px; }
+
+  /* Pills / chips */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: var(--r-chip);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .pill-positive { background: var(--bg-positive); color: var(--state-positive); }
+  .pill-warning  { background: var(--bg-warning); color: var(--state-warning); }
+  .pill-info     { background: var(--bg-info); color: var(--state-info); }
+
+  /* Info / state strips */
+  .strip {
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+  .strip .ms { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .strip-info     { background: var(--bg-info);     color: var(--state-info); }
+  .strip-warning  { background: var(--bg-warning);  color: var(--state-warning); }
+  .strip-positive { background: var(--bg-positive); color: var(--state-positive); }
+  .strip-negative { background: var(--bg-negative); color: var(--state-negative); }
+
+  .pill-negative { background: var(--bg-negative); color: var(--state-negative); }
+
+  /* Inline info icon (tap target) */
+  .info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    color: var(--text-hint);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .info-icon .ms { font-size: 18px; }
+  .k.with-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Calc strip — educational locked-amount explainer */
+  .calc-strip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-info);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--state-info);
+  }
+  .calc-strip > .ms {
+    font-size: 18px;
+    flex-shrink: 0;
+    color: var(--state-info);
+  }
+  .calc-strip .nums { font-weight: 700; color: var(--text-primary); }
+
+  /* Card sections (for split-card layout) */
+  .card-section { padding: 6px 0; }
+  .card-section + .card-section {
+    border-top: 1px solid var(--stroke-primary);
+    margin-top: 14px;
+    padding-top: 18px;
+  }
+  .card-section-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .card-section-head > .ms {
+    color: var(--text-secondary);
+    font-size: 18px;
+  }
+  .card-section-head .title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    flex: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* Locked-fund calc display (v2 — legacy, unused after refactor) */
+  .locked-calc {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 2px;
+  }
+  .locked-calc .main {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+  }
+  .locked-calc .total {
+    font-size: 13px;
+    color: var(--text-hint);
+    font-weight: 500;
+  }
+
+  /* Deposit breakdown (small lines beneath hero — label left, amount right) */
+  .deposit-breakdown {
+    margin-top: 14px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .breakdown-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 4px 0;
+  }
+  .breakdown-row .left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .breakdown-row .ms { font-size: 14px; color: var(--text-secondary); }
+  .breakdown-row .amt { color: var(--text-primary); font-weight: 600; }
+  .breakdown-row .info-icon { width: 18px; height: 18px; }
+  .breakdown-row .info-icon .ms { font-size: 15px; color: var(--text-hint); }
+
+  /* Netbox-only credit row — same size/weight as other kv-rows, just green */
+  .kv-row.credit-only .k,
+  .kv-row.credit-only .v {
+    color: var(--state-positive);
+  }
+  .kv-row.credit-only .info-icon,
+  .kv-row.credit-only .info-icon .ms {
+    color: var(--state-positive);
+  }
+
+  /* Credit value styling */
+  .v.credit-count {
+    color: var(--state-positive);
+    font-weight: 700;
+  }
+
+  /* Info bottom sheet content */
+  .info-sheet .bs-handle { margin: 4px auto 8px; }
+  .info-sheet-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--bg-info);
+    color: var(--state-info);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px 0 14px;
+  }
+  .info-sheet-icon .ms { font-size: 30px; }
+  .info-sheet-icon.positive { background: var(--bg-positive); color: var(--state-positive); }
+  .info-sheet-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+  .info-sheet-body {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    margin-top: 8px;
+  }
+  .bullet-list {
+    list-style: none;
+    padding: 0;
+    margin: 14px 0 0;
+  }
+  .bullet-list li {
+    display: flex;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-primary);
+    padding: 4px 0;
+  }
+  .bullet-list li::before {
+    content: '';
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    margin-top: 7px;
+    border-radius: 50%;
+    background: var(--brand-primary);
+  }
+
+  /* Primary CTA */
+  .cta-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 52px;
+    border-radius: 999px;
+    background: var(--brand-primary);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0;
+    border: none;
+    box-shadow: 0 1px 0 rgba(20,16,33,0.06);
+    cursor: default;
+  }
+  .cta-primary.disabled {
+    background: var(--input-border);
+    color: #fff;
+  }
+  .cta-secondary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 52px;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--brand-primary);
+    font-size: 15px;
+    font-weight: 600;
+    border: 1.5px solid var(--brand-primary);
+  }
+  .cta-tertiary {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--brand-primary);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  /* Card header (icon + title + trailing) */
+  .card-head {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-head .ms { color: var(--text-secondary); font-size: 20px; }
+  .card-head .title { flex: 1; font-size: 16px; font-weight: 700; color: var(--text-primary); }
+  .card-head .trailing { font-size: 14px; color: var(--text-primary); font-weight: 500; }
+
+  .kv-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .kv-row .k { color: var(--text-secondary); font-size: 14px; }
+  .kv-row .v { color: var(--text-primary); font-size: 14px; font-weight: 600; }
+
+  .nav-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 4px;
+    min-height: 36px;
+    align-items: center;
+  }
+  .nav-footer .arrow { font-size: 18px; line-height: 1; transform: translateY(-1px); }
+
+  /* Transaction row */
+  .tx-row {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--stroke-primary);
+  }
+  .tx-row:last-child { border-bottom: none; }
+  .tx-amount.credit { color: var(--state-positive); font-weight: 700; }
+  .tx-amount.debit  { color: var(--state-negative); font-weight: 700; }
+  .tx-meta {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 4px;
+  }
+  .tx-meta .left { color: var(--text-secondary); font-size: 12px; }
+
+  /* Bank card */
+  .bank-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--stroke-primary);
+    border-radius: 16px;
+    padding: 16px;
+  }
+  .bank-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: var(--bg-info);
+    color: var(--state-info);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+
+  /* Amount input */
+  .amount-field {
+    display: flex; align-items: center;
+    background: #fff;
+    border: 1.5px solid var(--input-border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    height: 56px;
+    transition: border-color 120ms ease;
+  }
+  .amount-field.focus { border-color: var(--brand-primary); }
+  .amount-field .prefix {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-right: 8px;
+  }
+  .amount-field input {
+    border: none; outline: none; background: transparent;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    flex: 1;
+    width: 100%;
+    font-family: inherit;
+  }
+  .amount-field input::placeholder { color: var(--text-hint); font-weight: 500; }
+
+  .quick-chips {
+    display: flex; gap: 8px;
+  }
+  .qchip {
+    flex: 1;
+    height: 40px;
+    border: 1.5px solid var(--input-border);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .qchip.active {
+    border-color: var(--brand-primary);
+    background: var(--brand-primary-subtle);
+    color: var(--brand-primary-pressed);
+  }
+
+  /* Bottom sheet */
+  .bs-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 16, 33, 0.45);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  .bs-sheet {
+    background: #fff;
+    border-radius: 24px 24px 0 0;
+    padding: 12px 20px 24px;
+    box-shadow: 0 -8px 24px rgba(20,16,33,0.18);
+    max-height: 80%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(20, 16, 33, 0.18) transparent;
+  }
+  .bs-handle {
+    width: 40px; height: 4px;
+    background: var(--input-border);
+    border-radius: 4px;
+    margin: 4px auto 16px;
+  }
+
+  /* Success */
+  .success-check {
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    background: var(--bg-positive);
+    color: var(--state-positive);
+    display: inline-flex; align-items: center; justify-content: center;
+    margin: 8px auto 0;
+    border: 2px solid var(--state-positive);
+  }
+  .success-check .ms { font-size: 48px; }
+
+  /* Inset bottom for home nav cushion on success */
+  .center-pad {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+  }
+
+  /* Keyboard hint */
+  .kbd-hint {
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--text-hint);
+  }
+  .kbd {
+    display: inline-block;
+    padding: 1px 6px;
+    border: 1px solid var(--input-border);
+    border-bottom-width: 2px;
+    border-radius: 4px;
+    background: #fff;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px;
+    color: var(--text-secondary);
+    margin: 0 2px;
+  }
+
+  /* States row banner (for non-active wallet only — shown as variant chip) */
+  .state-banner {
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .state-banner.hold { background: var(--bg-warning); color: var(--state-warning); }
+
+  /* ───────── Welcome card (hub intro) ───────── */
+  .welcome-card {
+    background: transparent;
+    border: none;
+    padding: 8px 4px 4px;
+    margin-bottom: 8px;
+  }
+  .welcome-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--brand-primary-subtle);
+    color: var(--brand-primary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+  .welcome-icon .ms { font-size: 26px; }
+  .welcome-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+  .welcome-desc {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+  .welcome-subtitle {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    margin-top: 16px;
+  }
+  .welcome-card .bullet-list { margin-top: 8px; }
+  .welcome-card .bullet-list li { font-size: 13px; }
+  .welcome-card .cta-primary { margin-top: 20px; height: 48px; font-size: 14px; }
+
+  /* ───────── Edge Cases Hub ───────── */
+  .phone-screen.hub-screen,
+  .hub-screen .status-bar,
+  .hub-screen .module-header {
+    background: var(--bg-warning);
+  }
+  .hub-intro {
+    padding: 4px 4px 16px;
+    font-size: 13px;
+    color: var(--state-warning);
+    line-height: 1.5;
+  }
+  .case-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+    border: 1px solid var(--stroke-primary);
+    border-left: 4px solid var(--brand-primary);
+    border-radius: 16px;
+    padding: 14px 14px 14px 10px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: transform 80ms ease, box-shadow 120ms ease;
+  }
+  .case-card:hover { box-shadow: 0 4px 12px rgba(20,16,33,0.08); }
+  .case-card:active { transform: scale(0.99); }
+  .case-card.main { border-left-color: var(--state-info); }
+  .case-card-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--bg-info);
+    color: var(--state-info);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  /* Numbered circle used in the Deposit Cases hub */
+  .case-card-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--brand-primary);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .case-card-icon.warning  { background: var(--bg-warning);  color: var(--state-warning); }
+  .case-card-icon.negative { background: var(--bg-negative); color: var(--state-negative); }
+  .case-card-icon.positive { background: var(--bg-positive); color: var(--state-positive); }
+  .case-card-meta { flex: 1; min-width: 0; }
+  .case-card-meta .title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .case-card-meta .desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    margin-top: 3px;
+  }
+  .case-card-chevron {
+    color: var(--text-hint);
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .case-card .frame-step {
+    width: auto;
+    height: auto;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--bg-warning);
+    color: var(--state-warning);
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+  .hub-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--state-warning);
+    padding: 4px;
+    margin: 8px 0 6px;
+  }
+
+  /* Exhausted-fund warning banner (Case 4) */
+  .exhausted-banner {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: var(--bg-negative);
+    border-radius: 12px;
+    padding: 12px;
+    color: var(--state-negative);
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+  .exhausted-banner .ms { font-size: 18px; flex-shrink: 0; margin-top: 1px; color: var(--state-negative); }
+  .exhausted-banner strong { color: var(--state-negative); }
+  .exhausted-dropdown {
+    background: #fff;
+    border: 1px solid var(--stroke-primary);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-top: 8px;
+  }
+  .exhausted-dropdown-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  .exhausted-dropdown-head .title { flex: 1; font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .exhausted-dropdown-head .ms { color: var(--text-secondary); font-size: 18px; }
+  .exhausted-dropdown-body {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--stroke-primary);
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* ───────── Home & Side nav ───────── */
+  :root {
+    --brand-secondary: #4A1535;
+  }
+  .home-bar {
+    height: 56px;
+    background: var(--brand-secondary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 6px 0 0;
+    gap: 6px;
+  }
+  .home-bar .status-spacer { width: 4px; }
+  .home-bar .icon-btn { color: #fff; }
+  .home-bar .icon-btn .ms { color: #fff; }
+  .home-bar .partner-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .home-bar .partner-role {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-left: 2px;
+    flex: 1;
+  }
+  .home-bar .home-bar-trail {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .phone-screen.home-screen .status-bar {
+    background: var(--brand-secondary);
+    color: #fff;
+  }
+  .phone-screen.home-screen .status-bar .ms { color: #fff; }
+  .phone-screen.home-screen .status-bar span:first-child { color: #fff; }
+
+  /* Assurance strip on Home */
+  .assurance-strip {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 2px 8px;
+    scrollbar-width: none;
+  }
+  .assurance-strip::-webkit-scrollbar { display: none; }
+  .assurance-chip {
+    flex-shrink: 0;
+    min-width: 124px;
+    background: #fff;
+    border: 1px solid var(--stroke-primary);
+    border-radius: 12px;
+    padding: 10px 12px;
+  }
+  .assurance-chip .chip-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .assurance-chip .chip-value {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-top: 4px;
+    letter-spacing: -0.01em;
+  }
+  .assurance-chip .chip-state {
+    font-size: 11px;
+    margin-top: 4px;
+    font-weight: 600;
+  }
+
+  /* Task card */
+  .task-card {
+    background: #fff;
+    border: 1px solid var(--stroke-primary);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .task-card .tc-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px;
+  }
+  .task-card .tc-title {
+    font-size: 14px; font-weight: 700; color: var(--text-primary);
+  }
+  .task-card .tc-customer {
+    font-size: 12px; color: var(--text-secondary); margin-top: 4px;
+  }
+
+  /* Side nav drawer */
+  .phone-screen.sidenav-screen {
+    background: var(--bg-screen);
+    flex-direction: row;
+  }
+  .drawer-panel {
+    width: 80%;
+    height: 100%;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+  }
+  .drawer-dim {
+    flex: 1;
+    height: 100%;
+    background: rgba(20, 16, 33, 0.45);
+    cursor: pointer;
+  }
+  .drawer-header {
+    background: var(--brand-secondary);
+    color: #fff;
+    padding: 28px 16px 20px;
+  }
+  .drawer-header .partner-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+  }
+  .drawer-header .partner-meta {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.65);
+    margin-top: 4px;
+  }
+  .drawer-items {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .drawer-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    min-height: 48px;
+    cursor: pointer;
+  }
+  .drawer-row:hover { background: var(--bg-screen); }
+  .drawer-row > .ms {
+    color: var(--text-primary);
+    font-size: 22px;
+  }
+  .drawer-row .label {
+    flex: 1;
+    font-size: 15px;
+    color: var(--text-primary);
+  }
+  .drawer-row .chevron {
+    color: var(--text-hint);
+    font-size: 20px;
+  }
+  .drawer-divider {
+    height: 1px;
+    background: var(--stroke-primary);
+    margin: 8px 16px;
+  }
+  .drawer-bottom {
+    border-top: 1px solid var(--stroke-primary);
+    padding-bottom: 12px;
+  }
+
+  /* Modal overlay — info bottom sheet appears inside the phone frame */
+  .modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 16, 33, 0.45);
+    display: none;
+    flex-direction: column;
+    justify-content: flex-end;
+    z-index: 20;
+  }
+  .modal-overlay.open { display: flex; }
+
+  /* Global scrollbar */
+  ::-webkit-scrollbar { height: 10px; width: 10px; }
+  ::-webkit-scrollbar-thumb { background: #d6d3df; border-radius: 999px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  /* Thinner scrollbar inside phone frames so it doesn't dominate */
+  .scroll-body::-webkit-scrollbar,
+  .bs-sheet::-webkit-scrollbar { width: 4px; }
+  .scroll-body::-webkit-scrollbar-thumb,
+  .bs-sheet::-webkit-scrollbar-thumb { background: rgba(20, 16, 33, 0.18); border-radius: 999px; }
+
+  /* ───────── Mobile (≤640px) — phone fills the viewport end-to-end ───────── */
+  @media (max-width: 640px) {
+    html, body { background: var(--bg-screen); }
+    .page {
+      padding: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      justify-content: space-between;
+    }
+    .stage {
+      width: 100vw;
+      flex: 1;
+    }
+    .frame {
+      width: 100vw;
+    }
+    .frame-label { display: none; }
+    .phone {
+      width: 100vw;
+      height: calc(100vh - 76px);
+      height: calc(100dvh - 76px);
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+      background: var(--bg-screen);
+    }
+    .phone-screen {
+      border-radius: 0;
+      height: 100%;
+    }
+    .frame-caption { display: none; }
+    .nav {
+      margin-top: 0;
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+    /* Safe-area for iOS notches / Android system bars */
+    .status-bar {
+      padding-top: env(safe-area-inset-top);
+      box-sizing: content-box;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="stage" id="stage">
+
+    <!-- ═══════════════════════════════════════════════════════════
+         FRAME 0 — Edge Cases Hub (yellow)
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="frame active" data-step="hub" data-is-hub>
+      <div class="frame-label">
+        <span class="frame-step" style="background:var(--state-warning);"><span class="ms ms-16" style="font-size:14px;">grid_view</span></span>
+        Edge Cases · Hub
+      </div>
+      <div class="phone">
+        <div class="phone-screen hub-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="module-header">
+            <div class="icon-btn" style="visibility:hidden;"><span class="ms">arrow_back</span></div>
+            <div class="title">Wiom Deposit Demo</div>
+          </div>
+          <div class="scroll-body">
+
+            <!-- Welcome card with start button -->
+            <div class="welcome-card">
+              <div class="welcome-icon" style="background:#E5D5F7; color:#6D17CE;"><span class="ms fill">tips_and_updates</span></div>
+              <div class="welcome-title">Wiom Partner App : Security Deposit (v2)</div>
+              <div class="welcome-desc">
+                Proposed new deposit model — no 50% reserve rule. Per-netbox security treated as discrete slots, with credits on return and clearer loss-handling.
+              </div>
+
+              <div class="welcome-subtitle">What's Covered</div>
+              <ul class="bullet-list numbered">
+                <li>Main deposit screen — active netboxes, return credits, forfeited count</li>
+                <li>Partner returns netboxes → credits added, deposit cash unchanged</li>
+                <li>Custodial loss confirmed by Wiom → full ₹1,538 deducted from wallet</li>
+                <li>Failed recovery → ₹200 security forfeited as a book entry (reversible)</li>
+                <li>Partner orders new netboxes → ₹200 each goes from wallet to deposit</li>
+              </ul>
+
+              <button class="cta-primary" data-target="1">Start</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         FRAME 1 — Home (tasks + assurance strip)
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="frame" data-step="1">
+      <div class="frame-label"><span class="frame-step">1</span>Home · Tasks Dashboard</div>
+      <div class="phone">
+        <div class="phone-screen home-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="home-bar">
+            <div class="icon-btn" data-target="2"><span class="ms">menu</span></div>
+            <div class="partner-name">रामेश्वर शर्मा</div>
+            <div class="partner-role">· मालिक</div>
+            <div class="home-bar-trail">
+              <div class="icon-btn"><span class="ms">notifications</span></div>
+            </div>
+          </div>
+          <div class="scroll-body">
+
+            <!-- Assurance strip -->
+            <div class="spacer-sm"></div>
+            <div class="assurance-strip">
+              <div class="assurance-chip">
+                <div class="chip-label">कनेक्शन</div>
+                <div class="chip-value">88</div>
+                <div class="chip-state" style="color:var(--state-positive);">सब चालू</div>
+              </div>
+              <div class="assurance-chip">
+                <div class="chip-label">इस बार की कमाई</div>
+                <div class="chip-value">₹4,210</div>
+                <div class="chip-state" style="color:var(--state-warning);">हिसाब हो रहा है</div>
+              </div>
+              <div class="assurance-chip">
+                <div class="chip-label">सेवा स्थिति</div>
+                <div class="chip-value">98%</div>
+                <div class="chip-state" style="color:var(--state-positive);">ठीक है</div>
+              </div>
+              <div class="assurance-chip">
+                <div class="chip-label">नया काम</div>
+                <div class="chip-value">12</div>
+                <div class="chip-state" style="color:var(--state-positive);">मिलेगा</div>
+              </div>
+            </div>
+
+            <div class="spacer-md"></div>
+            <div class="t-section" style="padding-left:4px;">आज के काम</div>
+            <div class="spacer-sm"></div>
+
+            <!-- Task cards (representative sample) -->
+            <div class="task-card">
+              <div class="tc-head">
+                <span class="tc-title">इंस्टॉल करें</span>
+                <span class="pill pill-warning">2 घंटे में</span>
+              </div>
+              <div class="tc-customer">रवि कुमार · NB#11201 · सेक्टर 27</div>
+            </div>
+            <div class="task-card">
+              <div class="tc-head">
+                <span class="tc-title">रिचार्ज की कोशिश करें</span>
+                <span class="pill pill-info">आज</span>
+              </div>
+              <div class="tc-customer">सुनीता देवी · NB#10987 · सेक्टर 14</div>
+            </div>
+            <div class="task-card">
+              <div class="tc-head">
+                <span class="tc-title">नेट-बॉक्स वापस लें</span>
+                <span class="pill pill-positive">कल</span>
+              </div>
+              <div class="tc-customer">अमित यादव · NB#10812 · सेक्टर 9</div>
+            </div>
+            <div class="task-card">
+              <div class="tc-head">
+                <span class="tc-title">कनेक्शन रिस्टोर करें</span>
+                <span class="pill pill-negative">देरी</span>
+              </div>
+              <div class="tc-customer">शबनम खान · NB#10654 · सेक्टर 21</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         FRAME 2 — Side Nav (drawer open)
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="frame" data-step="2">
+      <div class="frame-label"><span class="frame-step">2</span>Side Nav (Drawer)</div>
+      <div class="phone">
+        <div class="phone-screen sidenav-screen">
+          <!-- Drawer panel (80% width) -->
+          <div class="drawer-panel">
+            <div class="status-bar" style="background:var(--brand-secondary); color:#fff;">
+              <span style="color:#fff;">9:41</span>
+              <div class="status-right">
+                <span class="ms ms-16" style="color:#fff;">signal_cellular_alt</span>
+                <span class="ms ms-16" style="color:#fff;">wifi</span>
+                <span class="ms ms-16" style="color:#fff;">battery_full</span>
+              </div>
+            </div>
+            <div class="drawer-header">
+              <div class="partner-name">रामेश्वर शर्मा</div>
+              <div class="partner-meta">CSP-10421 · मालिक</div>
+            </div>
+            <div class="drawer-items">
+              <div class="drawer-row" data-target="3">
+                <span class="ms">account_balance_wallet</span>
+                <span class="label">पैसे</span>
+                <span class="ms chevron">chevron_right</span>
+              </div>
+              <div class="drawer-row">
+                <span class="ms">router</span>
+                <span class="label">नेट बॉक्स</span>
+                <span class="ms chevron">chevron_right</span>
+              </div>
+              <div class="drawer-row">
+                <span class="ms">groups</span>
+                <span class="label">टीम</span>
+                <span class="ms chevron">chevron_right</span>
+              </div>
+              <div class="drawer-divider"></div>
+              <div class="drawer-row">
+                <span class="ms">person</span>
+                <span class="label">सेटिंग्स</span>
+                <span class="ms chevron">chevron_right</span>
+              </div>
+              <div class="drawer-row">
+                <span class="ms">phone</span>
+                <span class="label">ट्रस्ट लाइन</span>
+                <span class="ms chevron">chevron_right</span>
+              </div>
+            </div>
+            <div class="drawer-bottom">
+              <div class="drawer-row">
+                <span class="ms">help_outline</span>
+                <span class="label">मदद</span>
+                <span class="ms chevron">chevron_right</span>
+              </div>
+            </div>
+          </div>
+          <!-- Dim backdrop (remaining 20%) — tap to close back to Home -->
+          <div class="drawer-dim" data-target="1"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         FRAME 3 — Wallet Home
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="frame" data-step="3">
+      <div class="frame-label"><span class="frame-step">3</span>Paise (Wallet Home)</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="module-header">
+            <div class="icon-btn" data-target="1"><span class="ms">arrow_back</span></div>
+            <div class="title">पैसे</div>
+          </div>
+          <div class="scroll-body">
+
+            <!-- Wallet hero card — with card-head similar to deposit card -->
+            <div class="card" style="padding:20px;">
+              <div class="card-head">
+                <span class="ms">account_balance_wallet</span>
+                <div class="title">वॉलेट बैलेंस</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="stack">
+                <div class="t-hero">₹2,840</div>
+                <div class="spacer-xs"></div>
+                <div class="t-body-sm">निकाल सकते हैं</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <button class="cta-primary">पैसे निकालें</button>
+              <div class="spacer-md"></div>
+              <div class="eligibility" style="justify-content:center;">
+                <span class="ms fill">check_circle</span>
+                आज 2 बार और पैसे निकाल सकते हैं
+              </div>
+            </div>
+
+            <!-- Deposit card -->
+            <div class="card">
+              <div class="card-head">
+                <span class="ms">savings</span>
+                <div class="title">नेट-बॉक्स डेपोजीट</div>
+                <div class="trailing">₹20,000</div>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row">
+                <span class="k">जारी किए गए नेट-बॉक्स</span>
+                <span class="v">100</span>
+              </div>
+              <div class="spacer-sm"></div>
+              <div class="kv-row">
+                <span class="k">वापसी बाकी</span>
+                <span class="v warning">2</span>
+              </div>
+              <div class="divider"></div>
+              <div class="nav-footer" data-target="4">
+                <span class="t-cta">डेपोजीट की डिटेल देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <!-- Recent activity card -->
+            <div class="card">
+              <div class="card-head">
+                <span class="ms">receipt_long</span>
+                <div class="title">हाल ही के लेन-देन</div>
+              </div>
+              <div class="tx-row">
+                <div class="row">
+                  <span class="t-card-id">रिचार्ज से कमाई</span>
+                  <span class="tx-amount credit">+₹1,240</span>
+                </div>
+                <div class="tx-meta">
+                  <span class="left">5 मई · 18 रिचार्ज</span>
+                  <span class="pill pill-positive">सफल</span>
+                </div>
+              </div>
+              <div class="nav-footer">
+                <span class="t-cta">सभी लेन-देन देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <!-- Bank card -->
+            <div class="bank-card" style="margin-top:16px;">
+              <div style="display:flex; gap:12px; align-items:flex-start;">
+                <span class="bank-icon"><span class="ms">account_balance</span></span>
+                <div style="flex:1;">
+                  <div class="t-card-id">ICICI Bank</div>
+                  <div class="spacer-xs"></div>
+                  <div class="t-card-id" style="font-weight:500;">XXXX XXXX 4521</div>
+                  <div class="spacer-xs"></div>
+                  <div class="t-body-sm">Saurav Gupta</div>
+                </div>
+                <span class="pill pill-positive">एक्टिव</span>
+              </div>
+              <div class="divider"></div>
+              <div class="nav-footer">
+                <span class="t-cta">बैंक खाता देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         FRAME 4 — Deposit Cases Hub (yellow)
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="frame" data-step="hub2" data-is-hub>
+      <div class="frame-label">
+        <span class="frame-step" style="background:var(--state-warning);"><span class="ms ms-16" style="font-size:14px;">grid_view</span></span>
+        Deposit Cases · Hub
+      </div>
+      <div class="phone">
+        <div class="phone-screen hub-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="module-header">
+            <div class="icon-btn" data-target="3"><span class="ms">arrow_back</span></div>
+            <div class="title">Deposit Cases (v2)</div>
+          </div>
+          <div class="scroll-body">
+
+            <div class="hub-intro">
+              Tap on any case to see how the new model behaves
+            </div>
+
+            <div class="case-card main" data-target="14">
+              <div class="case-card-num" style="background:#6D17CE;">1</div>
+              <div class="case-card-meta">
+                <div class="title">Main Screen</div>
+                <div class="desc">Per-netbox accounting · active / credits / forfeited</div>
+              </div>
+              <span class="ms case-card-chevron">chevron_right</span>
+            </div>
+
+            <div class="case-card" data-target="15">
+              <div class="case-card-num" style="background:#6D17CE;">2</div>
+              <div class="case-card-meta">
+                <div class="title">Returns</div>
+                <div class="desc">3 credits added — deposit untouched</div>
+              </div>
+              <span class="ms case-card-chevron">chevron_right</span>
+            </div>
+
+            <div class="case-card" data-target="16">
+              <div class="case-card-num" style="background:#6D17CE;">3</div>
+              <div class="case-card-meta">
+                <div class="title">Custodial Loss</div>
+                <div class="desc">Wiom-confirmed loss · ₹1,538 from wallet</div>
+              </div>
+              <span class="ms case-card-chevron">chevron_right</span>
+            </div>
+
+            <div class="case-card" data-target="17">
+              <div class="case-card-num" style="background:#6D17CE;">4</div>
+              <div class="case-card-meta">
+                <div class="title">Failed Recovery</div>
+                <div class="desc">₹200 forfeit · ledger only · reversible</div>
+              </div>
+              <span class="ms case-card-chevron">chevron_right</span>
+            </div>
+
+            <div class="case-card" data-target="10">
+              <div class="case-card-num" style="background:#6D17CE;">5</div>
+              <div class="case-card-meta">
+                <div class="title">New Netbox Order</div>
+                <div class="desc">+₹1,000 from wallet to deposit (5 × ₹200)</div>
+              </div>
+              <span class="ms case-card-chevron">chevron_right</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         FRAME 5 — Deposit Detail
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="frame" data-step="2">
+      <div class="frame-label"><span class="frame-step">2</span>Deposit Detail</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="module-header">
+            <div class="icon-btn" data-target="4"><span class="ms">arrow_back</span></div>
+            <div class="title">नेट-बॉक्स डेपोजीट</div>
+          </div>
+          <div class="scroll-body">
+
+            <!-- Balance card — header + hero + minimum + stats -->
+            <div class="card" style="padding:20px;">
+              <div class="card-head">
+                <span class="ms">savings</span>
+                <div class="title">बैलेंस</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="stack">
+                <div class="t-hero">₹20,000</div>
+                <div class="spacer-xs"></div>
+                <div class="t-body-sm">नेट-बॉक्स डेपोजीट</div>
+              </div>
+              <div class="spacer-xl"></div>
+
+              <!-- Educational calc strip — info icon opens locked-fund sheet (screen 8) -->
+              <div class="calc-strip">
+                <span class="ms fill">lock</span>
+                <span style="flex:1;">न्यूनतम <span class="nums">50% (₹10,000)</span> बैलेंस रखना अनिवार्य है</span>
+                <span class="info-icon" data-modal="locked-fund" title="सुरक्षित फंड क्यों रखा जाता है?"><span class="ms">info</span></span>
+              </div>
+
+              <div class="spacer-lg"></div>
+
+              <div class="kv-row">
+                <span class="k">कुल नेट-बॉक्स</span>
+                <span class="v">100</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row">
+                <span class="k">वापसी बाकी</span>
+                <span class="v warning">2</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <div class="t-section" style="padding-left:4px;">हाल के डेपोजीट लेन-देन</div>
+            <div class="spacer-sm"></div>
+
+            <!-- Money entries card — single most-recent entry -->
+            <div class="card" style="padding:8px 16px;">
+              <div class="tx-row">
+                <div class="row">
+                  <span class="t-card-id">शुरुआती डेपोजीट</span>
+                  <span class="tx-amount credit">+₹20,000</span>
+                </div>
+                <div class="tx-meta">
+                  <span class="left">5 अप्रैल · 100 नेट-बॉक्स</span>
+                  <span class="pill pill-warning">एग्जिट पर मिलेगा</span>
+                </div>
+              </div>
+              <div class="nav-footer">
+                <span class="t-cta">सभी लेन-देन देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- ═══════════════════════════════════════════════════════════
+         FRAME 3 — Transfer Input
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="frame" data-step="3">
+      <div class="frame-label"><span class="frame-step">3</span>Top-up — Input</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="module-header">
+            <div class="icon-btn" data-target="5"><span class="ms">arrow_back</span></div>
+            <div class="title">नेट-बॉक्स डेपोजीट टॉप-अप</div>
+          </div>
+          <div class="scroll-body">
+
+            <div class="kv-row">
+              <span class="k">वॉलेट में</span>
+              <span class="v">₹2,840</span>
+            </div>
+            <div class="spacer-sm"></div>
+            <div class="kv-row">
+              <span class="k">डेपोजीट में</span>
+              <span class="v">₹20,000</span>
+            </div>
+
+            <div class="spacer-lg"></div>
+
+            <div class="amount-field focus">
+              <span class="prefix">₹</span>
+              <input type="text" value="1,000" />
+            </div>
+
+            <div class="spacer-md"></div>
+            <div class="t-body-sm" style="padding-left:2px;">झटपट रकम</div>
+            <div class="spacer-sm"></div>
+            <div class="quick-chips">
+              <button class="qchip">₹500</button>
+              <button class="qchip active">₹1,000</button>
+              <button class="qchip">₹2,000</button>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <div class="strip strip-info">
+              <span class="ms fill">info</span>
+              <span>यह पैसा डेपोजीट में जाएगा — विड्रॉ नहीं कर सकते, एग्जिट पर मिलेगा</span>
+            </div>
+            <div class="spacer-sm"></div>
+            <div class="strip strip-positive">
+              <span class="ms fill">redeem</span>
+              <span>इस जमा से आपको <strong>5 नेट-बॉक्स क्रेडिट</strong> भी मिलेंगे (हर ₹200 = 1 क्रेडिट)</span>
+            </div>
+
+            <div class="spacer-xl"></div>
+            <button class="cta-primary" data-target="7">डेपोजीट में टॉप-अप करें</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!-- ═══════════════════════════════════════════════════════════
+         FRAME 4 — Transfer Confirm Sheet
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="frame" data-step="4">
+      <div class="frame-label"><span class="frame-step">4</span>Top-up — Confirm</div>
+      <div class="phone">
+        <div class="phone-screen">
+
+          <!-- Faded base behind sheet -->
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="module-header">
+            <div class="icon-btn" data-target="6"><span class="ms">arrow_back</span></div>
+            <div class="title">नेट-बॉक्स डेपोजीट टॉप-अप</div>
+          </div>
+          <div class="scroll-body" style="opacity:0.6;">
+            <div class="kv-row">
+              <span class="k">वॉलेट में</span>
+              <span class="v">₹2,840</span>
+            </div>
+            <div class="spacer-sm"></div>
+            <div class="kv-row">
+              <span class="k">डेपोजीट में</span>
+              <span class="v">₹20,000</span>
+            </div>
+            <div class="spacer-lg"></div>
+            <div class="amount-field">
+              <span class="prefix">₹</span>
+              <input type="text" value="1,000" />
+            </div>
+          </div>
+
+          <!-- Backdrop + sheet -->
+          <div class="bs-backdrop">
+            <div class="bs-sheet">
+              <div class="bs-handle"></div>
+
+              <div class="t-section" style="font-size:16px;">टॉप-अप पक्का करें</div>
+              <div class="spacer-lg"></div>
+              <div class="t-hero">₹1,000</div>
+              <div class="spacer-xs"></div>
+              <div class="t-body-sm">वॉलेट → डेपोजीट</div>
+              <div class="spacer-lg"></div>
+
+              <div class="kv-row">
+                <span class="k">वॉलेट में</span>
+                <span class="v">₹1,840</span>
+              </div>
+              <div class="spacer-sm"></div>
+              <div class="kv-row">
+                <span class="k">डेपोजीट में</span>
+                <span class="v">₹21,000</span>
+              </div>
+
+              <div class="spacer-md"></div>
+              <div class="t-body-sm hint">डेपोजीट एग्जिट पर मिलेगा</div>
+
+              <div class="spacer-xxl"></div>
+              <button class="cta-primary" data-target="8">हाँ, टॉप-अप करें</button>
+              <div class="spacer-sm"></div>
+              <button class="cta-secondary" data-target="6">वापस</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+<!-- ═══════════════════════════════════════════════════════════
+         FRAME 5 — Transfer Success
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="frame" data-step="5">
+      <div class="frame-label"><span class="frame-step">5</span>Top-up — Success</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="module-header">
+            <div class="icon-btn" data-target="5"><span class="ms">arrow_back</span></div>
+            <div class="title">नेट-बॉक्स डेपोजीट टॉप-अप</div>
+          </div>
+
+          <div class="center-pad">
+            <div class="success-check"><span class="ms fill">check</span></div>
+            <div class="spacer-xl"></div>
+            <div class="t-hero">₹1,000</div>
+            <div class="spacer-sm"></div>
+            <div class="t-body" style="color:var(--text-secondary);">डेपोजीट में आ गया</div>
+
+            <div class="spacer-xl"></div>
+
+            <div class="card" style="width:100%; text-align:left;">
+              <div class="kv-row">
+                <span class="k">नेट-बॉक्स डेपोजीट</span>
+                <span class="v">₹21,000</span>
+              </div>
+              <div class="spacer-sm"></div>
+              <div class="kv-row">
+                <span class="k">निकाल सकते हैं</span>
+                <span class="v">₹1,840</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="padding: 16px 20px 24px;">
+            <button class="cta-primary" data-target="5">डेपोजीट पर वापस</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         FRAME 6 — Case A · Device Lost (deduction from security fund)
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="frame" data-step="A">
+      <div class="frame-label">
+        <span class="frame-step" style="background:var(--state-negative);">A</span>
+        Case · नेट-बॉक्स लॉस्ट
+      </div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="module-header">
+            <div class="icon-btn" data-back-to-hub><span class="ms">arrow_back</span></div>
+            <div class="title">नेट-बॉक्स डेपोजीट</div>
+          </div>
+          <div class="scroll-body">
+
+            <!-- Balance card — Screen 2 structure -->
+            <div class="card" style="padding:20px;">
+              <div class="card-head">
+                <span class="ms">savings</span>
+                <div class="title">बैलेंस</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="stack">
+                <div class="t-hero">₹19,800</div>
+                <div class="spacer-xs"></div>
+                <div class="t-body-sm">नेट-बॉक्स डेपोजीट</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="calc-strip">
+                <span class="ms fill">lock</span>
+                <span style="flex:1;">न्यूनतम <span class="nums">50% (₹10,000)</span> बैलेंस रखना अनिवार्य है</span>
+                <span class="info-icon" data-modal="locked-fund" title="सुरक्षित फंड क्यों रखा जाता है?"><span class="ms">info</span></span>
+              </div>
+              <div class="spacer-lg"></div>
+              <div class="kv-row">
+                <span class="k">कुल नेट-बॉक्स</span>
+                <span class="v">99</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row">
+                <span class="k">वापसी बाकी</span>
+                <span class="v warning">2</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row credit-only">
+                <span class="k with-info">
+                  नेट-बॉक्स क्रेडिट
+                  <span class="info-icon" data-modal="credit" title="नेट-बॉक्स क्रेडिट क्या है?"><span class="ms">info</span></span>
+                </span>
+                <span class="v">3</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <div class="t-section" style="padding-left:4px;">हाल के डेपोजीट लेन-देन</div>
+            <div class="spacer-sm"></div>
+
+            <!-- Money entries — single most-recent (the lost-device deduction) -->
+            <div class="card" style="padding:8px 16px;">
+              <div class="tx-row">
+                <div class="row">
+                  <span class="t-card-id" style="color:var(--state-negative);">नेट-बॉक्स लॉस्ट · कटौती</span>
+                  <span class="tx-amount debit">−₹200</span>
+                </div>
+                <div class="tx-meta">
+                  <span class="left">आज · NB#10288</span>
+                  <span class="pill pill-negative">सुरक्षित फंड से कटा</span>
+                </div>
+              </div>
+              <div class="nav-footer">
+                <span class="t-cta">सभी लेन-देन देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <div class="t-section" style="padding-left:4px;">नेट-बॉक्स क्रेडिट हिस्ट्री</div>
+            <div class="spacer-sm"></div>
+
+            <!-- Credit entries — single most-recent -->
+            <div class="card" style="padding:8px 16px;">
+              <div class="tx-row">
+                <div class="row">
+                  <span class="t-card-id" style="color:var(--state-positive);">नेट-बॉक्स क्रेडिट मिला</span>
+                  <span class="tx-amount credit">+1 क्रेडिट</span>
+                </div>
+                <div class="tx-meta">
+                  <span class="left">1 मई · NB#09887 वापस</span>
+                  <span class="pill pill-positive">क्रेडिट जुड़ा</span>
+                </div>
+              </div>
+              <div class="nav-footer">
+                <span class="t-cta">सभी क्रेडिट देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         FRAME 7 — Case B · New device order (deduction from wallet → deposit grows)
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="frame" data-step="B">
+      <div class="frame-label">
+        <span class="frame-step" style="background:var(--brand-primary);">B</span>
+        Case · नया ऑर्डर
+      </div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="module-header">
+            <div class="icon-btn" data-target="4"><span class="ms">arrow_back</span></div>
+            <div class="title">नेट-बॉक्स डेपोजीट · v2</div>
+          </div>
+          <div class="scroll-body">
+
+            <!-- Balance card — v2 model -->
+            <div class="card" style="padding:20px;">
+              <div class="card-head">
+                <span class="ms">savings</span>
+                <div class="title">बैलेंस</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="stack">
+                <div class="t-hero">₹21,000</div>
+                <div class="spacer-xs"></div>
+                <div class="t-body-sm">नेट-बॉक्स डेपोजीट · 105 × ₹200</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="kv-row">
+                <span class="k">सक्रिय नेट-बॉक्स</span>
+                <span class="v">105</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row">
+                <span class="k">वापसी क्रेडिट</span>
+                <span class="v">0</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row">
+                <span class="k">फॉरफिटेड (बुक एंट्री)</span>
+                <span class="v">0</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <div class="t-section" style="padding-left:4px;">हाल के डेपोजीट लेन-देन</div>
+            <div class="spacer-sm"></div>
+
+            <!-- Money entries — single most-recent (new device order) -->
+            <div class="card" style="padding:8px 16px;">
+              <div class="tx-row">
+                <div class="row">
+                  <span class="t-card-id">5 नए नेट-बॉक्स · डेपोजीट जुड़ा</span>
+                  <span class="tx-amount credit">+₹1,000</span>
+                </div>
+                <div class="tx-meta">
+                  <span class="left">आज · वॉलेट से कटा</span>
+                  <span class="pill pill-warning">एग्जिट पर मिलेगा</span>
+                </div>
+              </div>
+              <div class="nav-footer">
+                <span class="t-cta">सभी लेन-देन देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <div class="t-section" style="padding-left:4px;">नेट-बॉक्स क्रेडिट हिस्ट्री</div>
+            <div class="spacer-sm"></div>
+
+            <!-- Credit entries — single most-recent -->
+            <div class="card" style="padding:8px 16px;">
+              <div class="tx-row">
+                <div class="row">
+                  <span class="t-card-id" style="color:var(--state-positive);">नेट-बॉक्स क्रेडिट मिला</span>
+                  <span class="tx-amount credit">+1 क्रेडिट</span>
+                </div>
+                <div class="tx-meta">
+                  <span class="left">1 मई · NB#09887 वापस</span>
+                  <span class="pill pill-positive">क्रेडिट जुड़ा</span>
+                </div>
+              </div>
+              <div class="nav-footer">
+                <span class="t-cta">सभी क्रेडिट देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         FRAME 8 — Case C · Deposit-for-credit (₹200 = 1 credit)
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="frame" data-step="C">
+      <div class="frame-label">
+        <span class="frame-step" style="background:var(--state-positive);">C</span>
+        Case · डेपोजीट → क्रेडिट
+      </div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="module-header">
+            <div class="icon-btn" data-back-to-hub><span class="ms">arrow_back</span></div>
+            <div class="title">नेट-बॉक्स डेपोजीट</div>
+          </div>
+          <div class="scroll-body">
+
+            <!-- Balance card — Screen 2 structure -->
+            <div class="card" style="padding:20px;">
+              <div class="card-head">
+                <span class="ms">savings</span>
+                <div class="title">बैलेंस</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="stack">
+                <div class="t-hero">₹21,000</div>
+                <div class="spacer-xs"></div>
+                <div class="t-body-sm">नेट-बॉक्स डेपोजीट</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="calc-strip">
+                <span class="ms fill">lock</span>
+                <span style="flex:1;">न्यूनतम <span class="nums">50% (₹10,500)</span> बैलेंस रखना अनिवार्य है</span>
+                <span class="info-icon" data-modal="locked-fund" title="सुरक्षित फंड क्यों रखा जाता है?"><span class="ms">info</span></span>
+              </div>
+              <div class="spacer-lg"></div>
+              <div class="kv-row">
+                <span class="k">कुल नेट-बॉक्स</span>
+                <span class="v">100</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row">
+                <span class="k">वापसी बाकी</span>
+                <span class="v warning">2</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row credit-only">
+                <span class="k with-info">
+                  नेट-बॉक्स क्रेडिट
+                  <span class="info-icon" data-modal="credit" title="नेट-बॉक्स क्रेडिट क्या है?"><span class="ms">info</span></span>
+                </span>
+                <span class="v">8</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <div class="t-section" style="padding-left:4px;">हाल के डेपोजीट लेन-देन</div>
+            <div class="spacer-sm"></div>
+
+            <!-- Money entries — single most-recent (wallet top-up earned credits) -->
+            <div class="card" style="padding:8px 16px;">
+              <div class="tx-row">
+                <div class="row">
+                  <span class="t-card-id" style="color:var(--state-positive);">वॉलेट से टॉप-अप · 5 क्रेडिट मिले</span>
+                  <span class="tx-amount credit">+₹1,000</span>
+                </div>
+                <div class="tx-meta">
+                  <span class="left">आज · डेपोजीट जमा</span>
+                  <span class="pill pill-positive">+5 क्रेडिट</span>
+                </div>
+              </div>
+              <div class="nav-footer">
+                <span class="t-cta">सभी लेन-देन देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <div class="t-section" style="padding-left:4px;">नेट-बॉक्स क्रेडिट हिस्ट्री</div>
+            <div class="spacer-sm"></div>
+
+            <!-- Credit entries — single most-recent (the +5 from this top-up) -->
+            <div class="card" style="padding:8px 16px;">
+              <div class="tx-row">
+                <div class="row">
+                  <span class="t-card-id" style="color:var(--state-positive);">डेपोजीट से 5 क्रेडिट मिले</span>
+                  <span class="tx-amount credit">+5 क्रेडिट</span>
+                </div>
+                <div class="tx-meta">
+                  <span class="left">आज · ₹1,000 जमा</span>
+                  <span class="pill pill-positive">क्रेडिट जुड़ा</span>
+                </div>
+              </div>
+              <div class="nav-footer">
+                <span class="t-cta">सभी क्रेडिट देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         FRAME 9 — Case D · 50% reserve exhausted (banner + dropdown)
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="frame" data-step="D" data-auto-modal="exhausted-warning">
+      <div class="frame-label">
+        <span class="frame-step" style="background:var(--state-warning);">D</span>
+        Case · 50% रिज़र्व ख़त्म
+      </div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="module-header">
+            <div class="icon-btn" data-back-to-hub><span class="ms">arrow_back</span></div>
+            <div class="title">नेट-बॉक्स डेपोजीट</div>
+          </div>
+          <div class="scroll-body">
+
+            <!-- Balance card — Screen 2 structure, balance at minimum floor -->
+            <div class="card" style="padding:20px;">
+              <div class="card-head">
+                <span class="ms">savings</span>
+                <div class="title">बैलेंस</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="stack">
+                <div class="t-hero">₹10,000</div>
+                <div class="spacer-xs"></div>
+                <div class="t-body-sm">नेट-बॉक्स डेपोजीट</div>
+              </div>
+              <div class="spacer-xl"></div>
+
+              <!-- Warning snack — replaces the minimum-balance calc-strip on this case -->
+              <div class="exhausted-banner">
+                <span class="ms fill">warning</span>
+                <span><strong>50% रिज़र्व बैलेंस ख़त्म हो गया है।</strong> अब आगे की कटौती सीधे आपके वॉलेट से होगी।</span>
+              </div>
+
+              <div class="spacer-lg"></div>
+              <div class="kv-row">
+                <span class="k">कुल नेट-बॉक्स</span>
+                <span class="v">48</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row">
+                <span class="k">वापसी बाकी</span>
+                <span class="v warning">2</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row credit-only">
+                <span class="k with-info">
+                  नेट-बॉक्स क्रेडिट
+                  <span class="info-icon" data-modal="credit" title="नेट-बॉक्स क्रेडिट क्या है?"><span class="ms">info</span></span>
+                </span>
+                <span class="v">3</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <div class="t-section" style="padding-left:4px;">हाल के डेपोजीट लेन-देन</div>
+            <div class="spacer-sm"></div>
+
+            <!-- Money entries — single wallet-source damage entry -->
+            <div class="card" style="padding:8px 16px;">
+              <div class="tx-row">
+                <div class="row">
+                  <span class="t-card-id" style="color:var(--state-negative);">नेट-बॉक्स क्षति · कटौती</span>
+                  <span class="tx-amount debit">−₹200</span>
+                </div>
+                <div class="tx-meta">
+                  <span class="left">आज · NB#10301</span>
+                  <span class="pill pill-negative">वॉलेट से कटा</span>
+                </div>
+              </div>
+              <div class="nav-footer">
+                <span class="t-cta">सभी लेन-देन देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <div class="t-section" style="padding-left:4px;">नेट-बॉक्स क्रेडिट हिस्ट्री</div>
+            <div class="spacer-sm"></div>
+
+            <!-- Credit entries — single most-recent -->
+            <div class="card" style="padding:8px 16px;">
+              <div class="tx-row">
+                <div class="row">
+                  <span class="t-card-id" style="color:var(--state-positive);">नेट-बॉक्स क्रेडिट मिला</span>
+                  <span class="tx-amount credit">+1 क्रेडिट</span>
+                </div>
+                <div class="tx-meta">
+                  <span class="left">1 मई · NB#09887 वापस</span>
+                  <span class="pill pill-positive">क्रेडिट जुड़ा</span>
+                </div>
+              </div>
+              <div class="nav-footer">
+                <span class="t-cta">सभी क्रेडिट देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         FRAME 13 — Case 1 · Deposit screen with auto-popup after 1s
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="frame" data-step="1a" data-auto-modal="received-credits">
+      <div class="frame-label">
+        <span class="frame-step" style="background:var(--state-positive);">1</span>
+        Case · Deposit with auto-popup
+      </div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="module-header">
+            <div class="icon-btn" data-target="4"><span class="ms">arrow_back</span></div>
+            <div class="title">नेट-बॉक्स डेपोजीट</div>
+          </div>
+          <div class="scroll-body">
+
+            <!-- Balance card — shows updated 3 credits after returns -->
+            <div class="card" style="padding:20px;">
+              <div class="card-head">
+                <span class="ms">savings</span>
+                <div class="title">बैलेंस</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="stack">
+                <div class="t-hero">₹20,000</div>
+                <div class="spacer-xs"></div>
+                <div class="t-body-sm">नेट-बॉक्स डेपोजीट</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="calc-strip">
+                <span class="ms fill">lock</span>
+                <span style="flex:1;">न्यूनतम <span class="nums">50% (₹10,000)</span> बैलेंस रखना अनिवार्य है</span>
+                <span class="info-icon" data-modal="locked-fund" title="सुरक्षित फंड क्यों रखा जाता है?"><span class="ms">info</span></span>
+              </div>
+              <div class="spacer-lg"></div>
+              <div class="kv-row">
+                <span class="k">कुल नेट-बॉक्स</span>
+                <span class="v">100</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row">
+                <span class="k">वापसी बाकी</span>
+                <span class="v warning">2</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row credit-only">
+                <span class="k with-info">
+                  नेट-बॉक्स क्रेडिट
+                  <span class="info-icon" data-modal="credit" title="नेट-बॉक्स क्रेडिट क्या है?"><span class="ms">info</span></span>
+                </span>
+                <span class="v">3</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <div class="t-section" style="padding-left:4px;">हाल के डेपोजीट लेन-देन</div>
+            <div class="spacer-sm"></div>
+
+            <div class="card" style="padding:8px 16px;">
+              <div class="tx-row">
+                <div class="row">
+                  <span class="t-card-id">शुरुआती डेपोजीट</span>
+                  <span class="tx-amount credit">+₹20,000</span>
+                </div>
+                <div class="tx-meta">
+                  <span class="left">5 अप्रैल · 100 नेट-बॉक्स</span>
+                  <span class="pill pill-warning">एग्जिट पर मिलेगा</span>
+                </div>
+              </div>
+              <div class="nav-footer">
+                <span class="t-cta">सभी लेन-देन देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <div class="t-section" style="padding-left:4px;">नेट-बॉक्स क्रेडिट हिस्ट्री</div>
+            <div class="spacer-sm"></div>
+
+            <!-- Credit entries — 3 returns just received -->
+            <div class="card" style="padding:8px 16px;">
+              <div class="tx-row">
+                <div class="row">
+                  <span class="t-card-id" style="color:var(--state-positive);">3 नेट-बॉक्स वापस · क्रेडिट मिले</span>
+                  <span class="tx-amount credit">+3 क्रेडिट</span>
+                </div>
+                <div class="tx-meta">
+                  <span class="left">आज · NB#09887, 09760, 09231</span>
+                  <span class="pill pill-positive">क्रेडिट जुड़ा</span>
+                </div>
+              </div>
+              <div class="nav-footer">
+                <span class="t-cta">सभी क्रेडिट देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         V2 FRAMES — Proposed new deposit model
+         · Returns → credits, deposit unchanged
+         · Custodial loss → ₹1,538 from wallet (Wiom-confirmed)
+         · Failed recovery → ₹200 ledger-only forfeit, reversible
+         ═══════════════════════════════════════════════════════════ -->
+
+    <!-- FRAME 14 — v2 Main Screen (no 50% rule) -->
+    <div class="frame" data-step="v2-main">
+      <div class="frame-label">
+        <span class="frame-step" style="background:#6D17CE;">v2</span>
+        Main Screen — new model
+      </div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="module-header">
+            <div class="icon-btn" data-target="4"><span class="ms">arrow_back</span></div>
+            <div class="title">नेट-बॉक्स डेपोजीट · v2</div>
+          </div>
+          <div class="scroll-body">
+
+            <div class="card" style="padding:20px;">
+              <div class="card-head">
+                <span class="ms">savings</span>
+                <div class="title">बैलेंस</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="stack">
+                <div class="t-hero">₹20,000</div>
+                <div class="spacer-xs"></div>
+                <div class="t-body-sm">नेट-बॉक्स डेपोजीट · 100 × ₹200</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="kv-row">
+                <span class="k">सक्रिय नेट-बॉक्स</span>
+                <span class="v">100</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row">
+                <span class="k">वापसी क्रेडिट</span>
+                <span class="v">0</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row">
+                <span class="k">फॉरफिटेड (बुक एंट्री)</span>
+                <span class="v">0</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <div class="t-section" style="padding-left:4px;">हाल के डेपोजीट लेन-देन</div>
+            <div class="spacer-sm"></div>
+
+            <div class="card" style="padding:8px 16px;">
+              <div class="tx-row">
+                <div class="row">
+                  <span class="t-card-id">शुरुआती डेपोजीट</span>
+                  <span class="tx-amount credit">+₹20,000</span>
+                </div>
+                <div class="tx-meta">
+                  <span class="left">5 अप्रैल · 100 नेट-बॉक्स</span>
+                  <span class="pill pill-warning">एग्जिट पर मिलेगा</span>
+                </div>
+              </div>
+              <div class="nav-footer">
+                <span class="t-cta">सभी लेन-देन देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FRAME 15 — v2 Returns (3 credits, deposit unchanged) -->
+    <div class="frame" data-step="v2-returns" data-auto-modal="received-credits">
+      <div class="frame-label">
+        <span class="frame-step" style="background:#6D17CE;">v2</span>
+        Returns — 3 credits added
+      </div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="module-header">
+            <div class="icon-btn" data-target="4"><span class="ms">arrow_back</span></div>
+            <div class="title">नेट-बॉक्स डेपोजीट · v2</div>
+          </div>
+          <div class="scroll-body">
+
+            <div class="card" style="padding:20px;">
+              <div class="card-head">
+                <span class="ms">savings</span>
+                <div class="title">बैलेंस</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="stack">
+                <div class="t-hero">₹20,000</div>
+                <div class="spacer-xs"></div>
+                <div class="t-body-sm">नेट-बॉक्स डेपोजीट</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="kv-row">
+                <span class="k">सक्रिय नेट-बॉक्स</span>
+                <span class="v">97</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row credit-only">
+                <span class="k">वापसी क्रेडिट</span>
+                <span class="v">3</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row">
+                <span class="k">फॉरफिटेड (बुक एंट्री)</span>
+                <span class="v">0</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <div class="t-section" style="padding-left:4px;">हाल के लेन-देन</div>
+            <div class="spacer-sm"></div>
+
+            <div class="card" style="padding:8px 16px;">
+              <div class="tx-row">
+                <div class="row">
+                  <span class="t-card-id" style="color:var(--state-positive);">3 नेट-बॉक्स वापस · क्रेडिट मिले</span>
+                  <span class="tx-amount credit">+3 क्रेडिट</span>
+                </div>
+                <div class="tx-meta">
+                  <span class="left">आज · NB#09887, 09760, 09231</span>
+                  <span class="pill pill-positive">क्रेडिट जुड़ा</span>
+                </div>
+              </div>
+              <div class="nav-footer">
+                <span class="t-cta">सभी क्रेडिट देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FRAME 16 — v2 Custodial Loss (₹1,538 from wallet) -->
+    <div class="frame" data-step="v2-custodial-loss">
+      <div class="frame-label">
+        <span class="frame-step" style="background:#6D17CE;">v2</span>
+        Custodial Loss — ₹1,538 wallet
+      </div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="module-header">
+            <div class="icon-btn" data-target="4"><span class="ms">arrow_back</span></div>
+            <div class="title">नेट-बॉक्स डेपोजीट · v2</div>
+          </div>
+          <div class="scroll-body">
+
+            <div class="card" style="padding:20px;">
+              <div class="card-head">
+                <span class="ms">savings</span>
+                <div class="title">बैलेंस</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="stack">
+                <div class="t-hero">₹20,000</div>
+                <div class="spacer-xs"></div>
+                <div class="t-body-sm">नेट-बॉक्स डेपोजीट · अपरिवर्तित</div>
+              </div>
+              <div class="spacer-xl"></div>
+
+              <div class="exhausted-banner">
+                <span class="ms fill">report</span>
+                <span><strong>Wiom ने नेट-बॉक्स खोने की पुष्टि की।</strong> पूरी कीमत ₹1,538 आपके वॉलेट से कटी।</span>
+              </div>
+
+              <div class="spacer-lg"></div>
+              <div class="kv-row">
+                <span class="k">सक्रिय नेट-बॉक्स</span>
+                <span class="v">99</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row">
+                <span class="k">वापसी क्रेडिट</span>
+                <span class="v">0</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row">
+                <span class="k">खोए नेट-बॉक्स</span>
+                <span class="v negative">1</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <div class="t-section" style="padding-left:4px;">हाल के लेन-देन</div>
+            <div class="spacer-sm"></div>
+
+            <div class="card" style="padding:8px 16px;">
+              <div class="tx-row">
+                <div class="row">
+                  <span class="t-card-id" style="color:var(--state-negative);">नेट-बॉक्स खोया · वॉलेट से कटौती</span>
+                  <span class="tx-amount debit">−₹1,538</span>
+                </div>
+                <div class="tx-meta">
+                  <span class="left">आज · NB#10288 · पूरी कीमत</span>
+                  <span class="pill pill-negative">वॉलेट से कटा</span>
+                </div>
+              </div>
+              <div class="nav-footer">
+                <span class="t-cta">सभी लेन-देन देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FRAME 17 — v2 Failed Recovery (₹200 forfeit, ledger only) -->
+    <div class="frame" data-step="v2-failed-recovery">
+      <div class="frame-label">
+        <span class="frame-step" style="background:#6D17CE;">v2</span>
+        Failed Recovery — ₹200 ledger
+      </div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-right">
+              <span class="ms ms-16">signal_cellular_alt</span>
+              <span class="ms ms-16">wifi</span>
+              <span class="ms ms-16">battery_full</span>
+            </div>
+          </div>
+          <div class="module-header">
+            <div class="icon-btn" data-target="4"><span class="ms">arrow_back</span></div>
+            <div class="title">नेट-बॉक्स डेपोजीट · v2</div>
+          </div>
+          <div class="scroll-body">
+
+            <div class="card" style="padding:20px;">
+              <div class="card-head">
+                <span class="ms">savings</span>
+                <div class="title">बैलेंस</div>
+              </div>
+              <div class="spacer-xl"></div>
+              <div class="stack">
+                <div class="t-hero">₹20,000</div>
+                <div class="spacer-xs"></div>
+                <div class="t-body-sm">नेट-बॉक्स डेपोजीट · कैश मूव नहीं हुआ</div>
+              </div>
+              <div class="spacer-xl"></div>
+
+              <div class="calc-strip" style="background:var(--bg-warning); color:var(--state-warning);">
+                <span class="ms fill" style="color:var(--state-warning);">assignment_late</span>
+                <span style="flex:1;">रिकवरी समय में नहीं हो पाई · सिक्योरिटी जब्त (बुक एंट्री) · रिकवरी मिले तो वापस</span>
+              </div>
+
+              <div class="spacer-lg"></div>
+              <div class="kv-row">
+                <span class="k">सक्रिय नेट-बॉक्स</span>
+                <span class="v">99</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row">
+                <span class="k">वापसी क्रेडिट</span>
+                <span class="v">0</span>
+              </div>
+              <div class="spacer-md"></div>
+              <div class="kv-row">
+                <span class="k">फॉरफिटेड (reversible)</span>
+                <span class="v warning">1</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <div class="t-section" style="padding-left:4px;">हाल के लेन-देन</div>
+            <div class="spacer-sm"></div>
+
+            <div class="card" style="padding:8px 16px;">
+              <div class="tx-row">
+                <div class="row">
+                  <span class="t-card-id">रिकवरी फेल · सिक्योरिटी जब्त</span>
+                  <span class="tx-amount" style="color:var(--state-warning); font-weight:700;">−₹200</span>
+                </div>
+                <div class="tx-meta">
+                  <span class="left">आज · NB#10301 · book-only</span>
+                  <span class="pill pill-warning">नेट-बॉक्स मिले तो वापस</span>
+                </div>
+              </div>
+              <div class="nav-footer">
+                <span class="t-cta">सभी लेन-देन देखें</span>
+                <span class="t-cta arrow">&nbsp;›</span>
+              </div>
+            </div>
+
+            <div class="spacer-lg"></div>
+            <button class="cta-primary" data-target="6">डेपोजीट में टॉप-अप करें</button>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.stage -->
+
+  <!-- Navigation -->
+  <div class="nav" role="group" aria-label="Step navigation">
+    <button class="nav-arrow" id="prevBtn" aria-label="Previous screen">
+      <span class="ms">arrow_back</span>
+    </button>
+    <button class="nav-arrow" id="nextBtn" aria-label="Next screen">
+      <span class="ms">arrow_forward</span>
+    </button>
+  </div>
+
+</div>
+
+<script>
+  (function() {
+    const frames = Array.from(document.querySelectorAll('.frame'));
+    const total = frames.length;
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let current = 0;
+
+    // ── Modal templates (single source of truth, injected on demand) ──
+    const MODAL_HTML = {
+      credit: `
+        <div class="bs-sheet info-sheet" data-modal-stop>
+          <div class="bs-handle"></div>
+          <div class="info-sheet-icon positive"><span class="ms fill">redeem</span></div>
+          <div class="info-sheet-title">नेट-बॉक्स क्रेडिट क्या है?</div>
+          <div class="info-sheet-body">
+            जब आप कोई नेट-बॉक्स वापस करते हैं, तो आपको एक क्रेडिट मिलता है। इस क्रेडिट से अगला नेट-बॉक्स बिना अतिरिक्त ₹200 दिए ऑर्डर कर सकते हैं।
+          </div>
+          <ul class="bullet-list">
+            <li>1 क्रेडिट = 1 नेट-बॉक्स ऑर्डर मुफ़्त</li>
+            <li>क्रेडिट कभी एक्सपायर नहीं होते</li>
+            <li>नया ऑर्डर करते समय अपने आप कट जाता है</li>
+          </ul>
+          <div class="spacer-xl"></div>
+          <button class="cta-primary" data-modal-close>समझ गया</button>
+          <div class="spacer-sm"></div>
+        </div>
+      `,
+      'exhausted-warning': `
+        <div class="bs-sheet info-sheet" data-modal-stop>
+          <div class="bs-handle"></div>
+          <div class="info-sheet-icon" style="background:var(--bg-negative); color:var(--state-negative);">
+            <span class="ms fill">warning</span>
+          </div>
+          <div class="info-sheet-title">50% रिज़र्व बैलेंस ख़त्म हो गया!</div>
+          <div class="info-sheet-body">
+            आपके सुरक्षित फंड की पूरी आधी रकम क्षति की कटौतियों में जा चुकी है। अब आगे की कटौतियाँ सीधे आपके वॉलेट से होंगी।
+          </div>
+          <div class="spacer-md"></div>
+          <div style="font-size:13px; font-weight:700; color:var(--text-primary);">वॉलेट से हुई हाल की कटौतियाँ</div>
+          <div style="margin-top:10px; font-size:12.5px; color:var(--text-secondary); line-height:1.5;">
+            <div class="row" style="padding:6px 0;">
+              <span>नेट-बॉक्स क्षति · NB#10301</span>
+              <span style="color:var(--state-negative); font-weight:600;">−₹200</span>
+            </div>
+            <div class="row" style="padding:6px 0;">
+              <span>नेट-बॉक्स क्षति · NB#10295</span>
+              <span style="color:var(--state-negative); font-weight:600;">−₹200</span>
+            </div>
+            <div class="row" style="padding:6px 0; border-top:1px dashed var(--stroke-primary);">
+              <span style="color:var(--text-primary); font-weight:600;">कुल वॉलेट कटौती</span>
+              <span style="color:var(--state-negative); font-weight:700;">−₹400</span>
+            </div>
+          </div>
+          <div class="spacer-xl"></div>
+          <button class="cta-primary" data-modal-close>ठीक है</button>
+          <div class="spacer-sm"></div>
+        </div>
+      `,
+      'received-credits': `
+        <div class="bs-sheet info-sheet" data-modal-stop>
+          <div class="bs-handle"></div>
+          <div class="info-sheet-icon positive"><span class="ms fill">redeem</span></div>
+          <div class="info-sheet-title">3 नेट-बॉक्स क्रेडिट मिले!</div>
+          <div class="info-sheet-body">
+            Wiom को आपके 3 नेट-बॉक्स वापस मिल गए हैं। बधाई हो — आपके खाते में <strong>3 नेट-बॉक्स क्रेडिट</strong> जुड़ गए हैं।
+          </div>
+          <div class="spacer-md"></div>
+          <div style="font-size:13px; font-weight:700; color:var(--text-primary);">इन क्रेडिट से आप क्या कर सकते हैं:</div>
+          <ul class="bullet-list">
+            <li>नया नेट-बॉक्स ऑर्डर करते समय ₹200 की जगह 1 क्रेडिट लग जाएगा</li>
+            <li>एक साथ कई क्रेडिट इस्तेमाल कर सकते हैं — जैसे 3 नेट-बॉक्स फ्री में ऑर्डर</li>
+            <li>क्रेडिट कभी एक्सपायर नहीं होते</li>
+          </ul>
+          <div class="spacer-xl"></div>
+          <button class="cta-primary" data-modal-close>ठीक है</button>
+          <div class="spacer-sm"></div>
+        </div>
+      `,
+      'locked-fund': `
+        <div class="bs-sheet info-sheet" data-modal-stop>
+          <div class="bs-handle"></div>
+          <div class="info-sheet-icon"><span class="ms fill">lock</span></div>
+          <div class="info-sheet-title">सुरक्षित फंड क्यों रखा जाता है?</div>
+          <div class="info-sheet-body">
+            50% (₹10,000) आपके कुल डेपोजीट का सुरक्षित हिस्सा है। यह राशि हमेशा कुल डेपोजीट के आधे के बराबर बनी रहती है, और एग्जिट पर पूरी वापस मिलती है।
+          </div>
+          <ul class="bullet-list">
+            <li>हमेशा कुल डेपोजीट का आधा हिस्सा सुरक्षित रहता है</li>
+            <li>खराब या खोए नेट-बॉक्स पर ₹200 इसी फंड से कटते हैं</li>
+            <li>फंड कम पड़ने पर बाकी रकम वॉलेट से कटती है</li>
+            <li>एग्जिट पर पूरी सुरक्षित राशि वापस मिलती है</li>
+          </ul>
+          <div class="spacer-xl"></div>
+          <button class="cta-primary" data-modal-close>समझ गया</button>
+          <div class="spacer-sm"></div>
+        </div>
+      `
+    };
+
+    function removeAllModals() {
+      document.querySelectorAll('.modal-overlay').forEach((m) => m.remove());
+    }
+
+    function openModal(id) {
+      const html = MODAL_HTML[id];
+      if (!html) return;
+      const activeFrame = document.querySelector('.frame.active');
+      if (!activeFrame) return;
+      const phoneScreen = activeFrame.querySelector('.phone-screen');
+      if (!phoneScreen) return;
+
+      removeAllModals();
+
+      const overlay = document.createElement('div');
+      overlay.className = 'modal-overlay open';
+      overlay.innerHTML = html;
+
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.remove();
+      });
+      const closeBtn = overlay.querySelector('[data-modal-close]');
+      if (closeBtn) closeBtn.addEventListener('click', () => overlay.remove());
+
+      phoneScreen.appendChild(overlay);
+    }
+
+    let originHub = 0; // tracks which hub the user last visited, for context-aware back-to-hub
+
+    let autoModalTimer = null;
+
+    function show(idx) {
+      if (idx < 0 || idx >= total) return;
+      // If we're leaving a hub frame, remember it as the origin for any subsequent back-to-hub
+      if (frames[current].hasAttribute('data-is-hub')) {
+        originHub = current;
+      }
+      // Cancel any pending auto-modal from previous navigation
+      if (autoModalTimer) { clearTimeout(autoModalTimer); autoModalTimer = null; }
+      removeAllModals();
+      frames[current].classList.remove('active');
+      current = idx;
+      frames[current].classList.add('active');
+      prevBtn.disabled = current === 0;
+      nextBtn.disabled = current === total - 1;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // If this frame should auto-open a modal, fire it after 1s
+      const autoModal = frames[current].getAttribute('data-auto-modal');
+      if (autoModal) {
+        autoModalTimer = setTimeout(() => {
+          // Only open if user is still on this frame
+          if (frames[current] && frames[current].classList.contains('active')) {
+            openModal(autoModal);
+          }
+        }, 1000);
+      }
+    }
+
+    prevBtn.addEventListener('click', () => show(current - 1));
+    nextBtn.addEventListener('click', () => show(current + 1));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); show(current - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); show(current + 1); }
+      if (e.key === 'Escape')     { e.preventDefault(); removeAllModals(); }
+    });
+
+    // Any element with data-target → jump to that frame index
+    document.querySelectorAll('[data-target]').forEach((el) => {
+      el.style.cursor = 'pointer';
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        const idx = parseInt(el.getAttribute('data-target'), 10);
+        if (!Number.isNaN(idx)) show(idx);
+      });
+    });
+
+    // Info icons → open modal
+    document.querySelectorAll('[data-modal]').forEach((el) => {
+      el.style.cursor = 'pointer';
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openModal(el.getAttribute('data-modal'));
+      });
+    });
+
+    // Case-screen back arrows → return to whichever hub the user came from
+    document.querySelectorAll('[data-back-to-hub]').forEach((btn) => {
+      btn.style.cursor = 'pointer';
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        show(originHub);
+      });
+    });
+
+    prevBtn.disabled = true;
+
+    // ── Guidance blink — when the user taps empty space (or a non-functional
+    //    element), highlight every actually-clickable element on screen so the
+    //    reviewer can spot where to tap.
+    function blinkColor(el) {
+      const rect = el.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) return;
+      const cs = getComputedStyle(el);
+      const overlay = document.createElement('div');
+      Object.assign(overlay.style, {
+        position: 'fixed',
+        left: rect.left + 'px',
+        top: rect.top + 'px',
+        width: rect.width + 'px',
+        height: rect.height + 'px',
+        background: '#D9008D',
+        opacity: '0.45',
+        pointerEvents: 'none',
+        zIndex: '9999',
+        borderRadius: cs.borderRadius || '0',
+        transition: 'opacity 600ms ease-out',
+      });
+      document.body.appendChild(overlay);
+      requestAnimationFrame(() => { overlay.style.opacity = '0'; });
+      setTimeout(() => overlay.remove(), 650);
+    }
+
+    // Selector for elements that actually do something (navigate / open modal / close).
+    const FUNCTIONAL_SELECTOR =
+      '.nav-arrow, [data-target], [data-modal], [data-back-to-hub], [data-modal-close]';
+
+    document.addEventListener('click', (e) => {
+      // If the click hit a functional element, let its own handler fire — no guidance needed.
+      if (e.target.closest(FUNCTIONAL_SELECTOR)) return;
+
+      // Empty / non-functional tap → blink all functional elements within the current view
+      // (active frame, or the open modal if one is up).
+      const container = document.querySelector('.modal-overlay.open') ||
+                        document.querySelector('.frame.active');
+      if (!container) return;
+      container.querySelectorAll(FUNCTIONAL_SELECTOR).forEach((el) => blinkColor(el));
+    });
+  })();
+</script>
+</body>
+</html>
